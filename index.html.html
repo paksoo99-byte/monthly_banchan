@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리가족반찬 주문하기</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #FDF8F2; --card: #FFFFFF; --accent: #C85A2A; --accent-soft: #F5E6DC;
+    --accent2: #3A7D44; --accent2-soft: #E0F0E3; --text: #2A1F1A;
+    --muted: #8C7B73; --border: #E8DDD6; --shadow: 0 2px 12px rgba(42,31,26,0.08);
+  }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 60px; }
+  .header { background: var(--accent); color: #fff; padding: 28px 20px 22px; text-align: center; }
+  .header .badge { display: inline-block; background: rgba(255,255,255,0.22); border-radius: 20px; padding: 3px 14px; font-size: 12px; font-weight: 500; margin-bottom: 10px; }
+  .header h1 { font-size: 22px; font-weight: 900; line-height: 1.3; }
+  .header .sub { margin-top: 6px; font-size: 13px; opacity: 0.88; }
+  .header .deadline { margin-top: 12px; background: rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 16px; font-size: 13px; display: inline-block; }
+  .main { max-width: 480px; margin: 0 auto; padding: 20px 16px 0; }
+  .name-section, .section-card { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 10px; }
+  .name-input { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 16px; font-family: inherit; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.2s; }
+  .name-input:focus { border-color: var(--accent); }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .section-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+  .count-badge { font-size: 12px; font-weight: 700; background: var(--accent-soft); color: var(--accent); border-radius: 20px; padding: 3px 10px; }
+  .count-badge.green { background: var(--accent2-soft); color: var(--accent2); }
+  .count-badge.warn { background: #FDE8E8; color: #C0392B; }
+  .menu-list { display: flex; flex-direction: column; gap: 8px; }
+  .menu-item { position: relative; }
+  .menu-item input { display: none; }
+  .menu-item label { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.18s; font-size: 14px; font-weight: 500; user-select: none; background: var(--bg); }
+  .menu-item label:active { transform: scale(0.98); }
+  .dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.18s; }
+  .dot::after { content: ''; width: 9px; height: 9px; border-radius: 50%; background: #fff; opacity: 0; transition: opacity 0.15s; }
+  .menu-item input[type=radio]:checked + label { border-color: var(--accent); background: var(--accent-soft); }
+  .menu-item input[type=radio]:checked + label .dot { background: var(--accent); border-color: var(--accent); }
+  .menu-item input[type=radio]:checked + label .dot::after { opacity: 1; }
+  .box { width: 20px; height: 20px; border-radius: 5px; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.18s; font-size: 12px; }
+  .menu-item input[type=checkbox]:checked + label { border-color: var(--accent2); background: var(--accent2-soft); }
+  .menu-item input[type=checkbox]:checked + label .box { background: var(--accent2); border-color: var(--accent2); color: #fff; }
+  .menu-item input[type=checkbox]:disabled + label { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+  .submit-btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 14px; padding: 16px; font-size: 17px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 4px; transition: background 0.18s, transform 0.12s; box-shadow: 0 4px 16px rgba(200,90,42,0.3); }
+  .submit-btn:active { transform: scale(0.98); }
+  .admin-link { display: block; text-align: center; margin-top: 24px; color: var(--muted); font-size: 12px; cursor: pointer; }
+  .notice { background: #FFF8E7; border-left: 3px solid #F5A623; border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 12px; color: #7A5C00; margin-bottom: 14px; line-height: 1.5; }
+  .done-screen { display: none; text-align: center; padding: 40px 20px; }
+  .done-screen .emoji { font-size: 60px; margin-bottom: 16px; }
+  .done-screen h2 { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+  .done-screen p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+  .done-summary { background: var(--card); border-radius: 14px; padding: 18px; margin-top: 20px; text-align: left; box-shadow: var(--shadow); }
+  .done-summary .row { font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .done-summary .row:last-child { border-bottom: none; }
+  .admin-screen { display: none; }
+  .admin-header { background: #2A1F1A; color: #fff; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .admin-header h2 { font-size: 16px; font-weight: 700; }
+  .admin-back { font-size: 13px; color: rgba(255,255,255,0.7); cursor: pointer; background: none; border: none; font-family: inherit; }
+  .admin-body { padding: 16px; max-width: 480px; margin: 0 auto; }
+  .admin-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .admin-tab { flex: 1; padding: 10px 4px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--card); font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer; color: var(--muted); transition: all 0.18s; }
+  .admin-tab.active { background: #2A1F1A; color: #fff; border-color: #2A1F1A; }
+  .admin-stats { background: var(--accent); color: #fff; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; font-size: 14px; font-weight: 700; }
+  .order-card { background: var(--card); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow); }
+  .order-name { font-weight: 700; font-size: 15px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
+  .order-time { font-size: 11px; color: var(--muted); }
+  .order-items { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .order-items span { color: var(--text); font-weight: 500; }
+  .empty-admin { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 14px; }
+  .danger-btn { width: 100%; background: #FDE8E8; color: #C0392B; border: none; border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 10px; }
+  .edit-section { background: var(--card); border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow); }
+  .edit-section-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+  .edit-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .edit-item input[type=text] { flex: 1; border: 1.5px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; background: var(--bg); outline: none; }
+  .edit-item input[type=text]:focus { border-color: var(--accent); }
+  .del-btn { width: 32px; height: 32px; border: none; border-radius: 8px; background: #FDE8E8; color: #C0392B; font-size: 16px; cursor: pointer; flex-shrink: 0; }
+  .dup-btn { font-size: 11px; padding: 5px 8px; border: 1.5px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--muted); cursor: pointer; flex-shrink: 0; font-family: inherit; white-space: nowrap; }
+  .dup-btn.on { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+  .add-row { display: flex; gap: 8px; margin-top: 4px; }
+  .add-input { flex: 1; border: 1.5px dashed var(--border); border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; background: transparent; outline: none; color: var(--text); }
+  .add-input:focus { border-color: var(--accent2); border-style: solid; }
+  .add-btn { padding: 9px 16px; background: var(--accent2); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; }
+  .save-btn { width: 100%; background: #2A1F1A; color: #fff; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 4px; }
+  .info-row { margin-bottom: 12px; }
+  .info-row label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+  .info-row input { width: 100%; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; background: var(--bg); outline: none; }
+  .info-row input:focus { border-color: var(--accent); }
+  .cnt-row { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .cnt-row input { width: 65px; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; background: var(--bg); outline: none; }
+</style>
+</head>
+<body>
+
+<!-- 주문 화면 -->
+<div id="orderScreen">
+  <div class="header">
+    <div class="badge" id="hBadge"></div>
+    <h1>이번 주 반찬을<br>골라주세요 🥢</h1>
+    <div class="sub" id="hSub"></div>
+    <div class="deadline" id="hDeadline"></div>
+  </div>
+  <div class="main">
+    <div class="name-section">
+      <div class="section-label">주문자 이름</div>
+      <input class="name-input" type="text" id="customerName" placeholder="이름을 입력하세요" maxlength="20">
+    </div>
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><span>🍲</span> 국·찌개</div>
+        <div class="count-badge" id="soupBadge">1개 고르세요</div>
+      </div>
+      <div class="menu-list" id="soupList"></div>
+    </div>
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><span>🥗</span> 반찬</div>
+        <div class="count-badge green" id="sideBadge"></div>
+      </div>
+      <div class="notice" id="dupNotice" style="display:none">⚠️ 중복 선택 불가 품목이 포함되어 있어요.</div>
+      <div class="menu-list" id="sideList"></div>
+    </div>
+    <button class="submit-btn" onclick="submitOrder()">주문 완료하기 →</button>
+    <a class="admin-link" onclick="showAdmin()">🔑 관리자 모드</a>
+  </div>
+</div>
+
+<!-- 완료 화면 -->
+<div id="doneScreen" class="done-screen">
+  <div class="main">
+    <div class="emoji">🎉</div>
+    <h2>주문 완료!</h2>
+    <p>선택하신 내용이 저장되었어요.<br>발송일에 맛있는 반찬 기대하세요 😊</p>
+    <div class="done-summary" id="doneSummary"></div>
+    <button class="submit-btn" style="margin-top:20px;" onclick="resetOrder()">다시 주문하기</button>
+    <a class="admin-link" onclick="showAdmin()">🔑 관리자 모드</a>
+  </div>
+</div>
+
+<!-- 관리자 화면 -->
+<div id="adminScreen" class="admin-screen">
+  <div class="admin-header">
+    <h2>⚙️ 관리자 모드</h2>
+    <button class="admin-back" onclick="hideAdmin()">← 닫기</button>
+  </div>
+  <div class="admin-body">
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchTab('orders')">📋 주문현황</button>
+      <button class="admin-tab" onclick="switchTab('menu')">✏️ 메뉴편집</button>
+      <button class="admin-tab" onclick="switchTab('info')">📅 발송정보</button>
+    </div>
+
+    <!-- 주문현황 -->
+    <div id="tab-orders">
+      <div class="admin-stats" id="adminStats"></div>
+      <div id="adminOrders"></div>
+      <button class="danger-btn" onclick="clearOrders()">🗑 전체 주문 초기화</button>
+    </div>
+
+    <!-- 메뉴편집 -->
+    <div id="tab-menu" style="display:none">
+      <div class="edit-section">
+        <div class="edit-section-title">🍲 국·찌개 목록</div>
+        <div id="editSoupList"></div>
+        <div class="add-row">
+          <input class="add-input" id="newSoup" placeholder="새 국·찌개 이름...">
+          <button class="add-btn" onclick="addSoup()">+ 추가</button>
+        </div>
+      </div>
+      <div class="edit-section">
+        <div class="edit-section-title">🥗 반찬 목록</div>
+        <div id="editSideList"></div>
+        <div class="add-row">
+          <input class="add-input" id="newSide" placeholder="새 반찬 이름...">
+          <button class="add-btn" onclick="addSide()">+ 추가</button>
+        </div>
+      </div>
+      <div class="edit-section">
+        <div class="edit-section-title">🔢 반찬 선택 개수</div>
+        <div class="cnt-row">
+          <span>고객이 선택해야 할 반찬 수</span>
+          <input type="number" id="sideCountInput" min="1" max="20" value="5">
+          <span style="color:var(--muted)">개</span>
+        </div>
+      </div>
+      <button class="save-btn" onclick="saveMenu()">✅ 메뉴 저장하기</button>
+    </div>
+
+    <!-- 발송정보 -->
+    <div id="tab-info" style="display:none">
+      <div class="edit-section">
+        <div class="edit-section-title">📅 이번 주 발송 정보</div>
+        <div class="info-row">
+          <label>상단 배지 (예: 우리가족반찬 2025년 5월 · 2회차)</label>
+          <input type="text" id="editBadge">
+        </div>
+        <div class="info-row">
+          <label>발송일</label>
+          <input type="text" id="editDeadline" placeholder="예: 6월 18일">
+        </div>
+        <div class="info-row">
+          <label>안내 문구</label>
+          <input type="text" id="editMsg" placeholder="예: 빨리 안 고르시면 제가 마음대로 보냅니다 😮‍💨">
+        </div>
+      </div>
+      <button class="save-btn" onclick="saveInfo()">✅ 발송 정보 저장</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DEF = {
+  badge: '우리가족반찬 2025년 5월 · 1회차',
+  deadline: '6월 11일',
+  msg: '빨리 안 고르시면 제가 마음대로 보냅니다 😮‍💨',
+  soups: ['쇠고기미역국','쇠고기샤브샤브','우렁된장찌개 밀키트','청국장','24시 콩나물국','콩비지찌개','아욱국','해물순두부찌개'],
+  sides: [
+    {name:'햇생깻잎',nd:false},{name:'웰빙견과조림',nd:false},{name:'도라지오이무침',nd:false},
+    {name:'토마토김치',nd:true},{name:'나물1',nd:false},{name:'우엉채어묵채',nd:false},
+    {name:'마른반찬',nd:false},{name:'쇠고기카레',nd:true},{name:'손가락동치미',nd:false},{name:'브로콜리햄볶음',nd:false}
+  ],
+  sideCount: 5
+};
+
+const ld = (k,d) => { try { const v=localStorage.getItem(k); return v?JSON.parse(v):d; } catch{ return d; }};
+const sv = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+const getInfo = () => ld('bc_info', {badge:DEF.badge, deadline:DEF.deadline, msg:DEF.msg});
+const getSoups = () => ld('bc_soups', DEF.soups);
+const getSides = () => ld('bc_sides', DEF.sides);
+const getSC = () => ld('bc_sc', DEF.sideCount);
+const getOrders = () => ld('bc_orders', []);
+
+function renderOrder() {
+  const info=getInfo(), soups=getSoups(), sides=getSides(), sc=getSC();
+  const hasDup = sides.some(s=>s.nd);
+  document.getElementById('hBadge').textContent = '🏠 ' + info.badge;
+  document.getElementById('hSub').textContent = '국·찌개 1개 + 반찬 ' + sc + '개 선택';
+  document.getElementById('hDeadline').innerHTML = '📦 발송일 <strong>' + info.deadline + '</strong> · ' + info.msg;
+  document.getElementById('sideBadge').textContent = sc + '개 고르세요';
+  document.getElementById('dupNotice').style.display = hasDup ? '' : 'none';
+
+  document.getElementById('soupList').innerHTML = soups.map((s,i) =>
+    `<div class="menu-item"><input type="radio" name="soup" id="s${i}" value="${s}">
+     <label for="s${i}"><span class="dot"></span>${s}</label></div>`
+  ).join('');
+
+  document.getElementById('sideList').innerHTML = sides.map((s,i) =>
+    `<div class="menu-item"><input type="checkbox" id="b${i}" value="${s.name}">
+     <label for="b${i}"><span class="box">✓</span>${s.name}${s.nd?'<span style="color:var(--accent);font-size:11px;margin-left:6px;">중복불가</span>':''}</label></div>`
+  ).join('');
+
+  document.querySelectorAll('#sideList input[type=checkbox]').forEach(c=>c.addEventListener('change', updateSideBadge));
+  document.querySelectorAll('input[name=soup]').forEach(r=>r.addEventListener('change', updateSoupBadge));
+}
+
+function updateSideBadge() {
+  const sc=getSC(), checks=[...document.querySelectorAll('#sideList input[type=checkbox]')];
+  const cnt=checks.filter(c=>c.checked).length, b=document.getElementById('sideBadge');
+  checks.forEach(c=>{ if(!c.checked) c.disabled=cnt>=sc; });
+  if(cnt===sc){ b.className='count-badge green'; b.textContent='✅ '+sc+'개 완료'; }
+  else if(cnt>sc){ b.className='count-badge warn'; b.textContent=cnt+'개 (초과!)'; }
+  else { b.className='count-badge green'; b.textContent=cnt+' / '+sc+'개'; }
+}
+function updateSoupBadge() {
+  const sel=document.querySelector('input[name=soup]:checked'), b=document.getElementById('soupBadge');
+  if(sel){ b.textContent='✅ 선택 완료'; b.className='count-badge green'; }
+  else { b.textContent='1개 고르세요'; b.className='count-badge'; }
+}
+
+function submitOrder() {
+  const name=document.getElementById('customerName').value.trim();
+  const soup=document.querySelector('input[name=soup]:checked');
+  const sides=[...document.querySelectorAll('#sideList input[type=checkbox]')].filter(c=>c.checked).map(c=>c.value);
+  const sc=getSC();
+  if(!name){ alert('이름을 입력해주세요!'); return; }
+  if(!soup){ alert('국·찌개를 1개 선택해주세요!'); return; }
+  if(sides.length!==sc){ alert('반찬을 정확히 '+sc+'개 선택해주세요! (현재 '+sides.length+'개)'); return; }
+  const orders=getOrders();
+  orders.push({name, soup:soup.value, sides, time:new Date().toLocaleString('ko-KR')});
+  sv('bc_orders', orders);
+  document.getElementById('orderScreen').style.display='none';
+  document.getElementById('doneScreen').style.display='block';
+  document.getElementById('doneSummary').innerHTML=
+    `<div class="row">👤 <strong>${name}</strong> 님</div>
+     <div class="row">🍲 ${soup.value}</div>
+     <div class="row">🥗 ${sides.join(' · ')}</div>
+     <div class="row" style="color:var(--muted);font-size:11px;">⏰ ${new Date().toLocaleString('ko-KR')}</div>`;
+}
+
+function resetOrder() {
+  document.getElementById('customerName').value='';
+  document.getElementById('doneScreen').style.display='none';
+  document.getElementById('orderScreen').style.display='block';
+  renderOrder();
+}
+
+function showAdmin() {
+  document.getElementById('orderScreen').style.display='none';
+  document.getElementById('doneScreen').style.display='none';
+  document.getElementById('adminScreen').style.display='block';
+  switchTab('orders');
+}
+function hideAdmin() {
+  document.getElementById('adminScreen').style.display='none';
+  renderOrder();
+  document.getElementById('orderScreen').style.display='block';
+}
+
+function switchTab(tab) {
+  ['orders','menu','info'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===tab?'':'none';
+  });
+  document.querySelectorAll('.admin-tab').forEach((el,i)=>{
+    el.classList.toggle('active',['orders','menu','info'][i]===tab);
+  });
+  if(tab==='orders') renderOrders();
+  if(tab==='menu')   renderMenuEditor();
+  if(tab==='info')   renderInfoEditor();
+}
+
+function renderOrders() {
+  const orders=getOrders();
+  document.getElementById('adminStats').textContent='총 '+orders.length+'명 주문 완료';
+  const box=document.getElementById('adminOrders');
+  if(!orders.length){ box.innerHTML='<div class="empty-admin">아직 주문이 없어요 🥺</div>'; return; }
+  box.innerHTML=orders.map(o=>
+    `<div class="order-card">
+      <div class="order-name"><span>👤 ${o.name}</span><span class="order-time">${o.time}</span></div>
+      <div class="order-items">🍲 <span>${o.soup}</span><br>🥗 <span>${o.sides.join(', ')}</span></div>
+    </div>`
+  ).join('');
+}
+function clearOrders() {
+  if(confirm('전체 주문을 초기화할까요?')){ sv('bc_orders',[]); renderOrders(); }
+}
+
+// 메뉴 편집
+function renderMenuEditor() {
+  const soups=getSoups(), sides=getSides();
+  document.getElementById('sideCountInput').value=getSC();
+  document.getElementById('editSoupList').innerHTML=soups.map((s,i)=>
+    `<div class="edit-item">
+      <input type="text" id="sv${i}" value="${s}">
+      <button class="del-btn" onclick="delSoup(${i})">✕</button>
+    </div>`
+  ).join('');
+  document.getElementById('editSideList').innerHTML=sides.map((s,i)=>
+    `<div class="edit-item">
+      <input type="text" id="sdv${i}" value="${s.name}">
+      <button class="dup-btn ${s.nd?'on':''}" id="dup${i}" onclick="togDup(${i})">${s.nd?'중복불가 ✓':'중복가능'}</button>
+      <button class="del-btn" onclick="delSide(${i})">✕</button>
+    </div>`
+  ).join('');
+}
+function delSoup(i){ const s=getSoups(); s.splice(i,1); sv('bc_soups',s); renderMenuEditor(); }
+function delSide(i){ const s=getSides(); s.splice(i,1); sv('bc_sides',s); renderMenuEditor(); }
+function togDup(i){ const s=getSides(); s[i].nd=!s[i].nd; sv('bc_sides',s); renderMenuEditor(); }
+function addSoup(){
+  const v=document.getElementById('newSoup').value.trim(); if(!v) return;
+  const s=getSoups(); s.push(v); sv('bc_soups',s);
+  document.getElementById('newSoup').value=''; renderMenuEditor();
+}
+function addSide(){
+  const v=document.getElementById('newSide').value.trim(); if(!v) return;
+  const s=getSides(); s.push({name:v,nd:false}); sv('bc_sides',s);
+  document.getElementById('newSide').value=''; renderMenuEditor();
+}
+function saveMenu(){
+  const soups=getSoups();
+  soups.forEach((_,i)=>{ soups[i]=(document.getElementById('sv'+i)||{}).value||soups[i]; });
+  sv('bc_soups',soups);
+  const sides=getSides();
+  sides.forEach((s,i)=>{ s.name=(document.getElementById('sdv'+i)||{}).value||s.name; });
+  sv('bc_sides',sides);
+  sv('bc_sc', parseInt(document.getElementById('sideCountInput').value)||5);
+  alert('✅ 메뉴가 저장되었어요!');
+  renderMenuEditor();
+}
+
+// 발송 정보
+function renderInfoEditor(){
+  const info=getInfo();
+  document.getElementById('editBadge').value=info.badge;
+  document.getElementById('editDeadline').value=info.deadline;
+  document.getElementById('editMsg').value=info.msg;
+}
+function saveInfo(){
+  sv('bc_info',{
+    badge: document.getElementById('editBadge').value.trim()||DEF.badge,
+    deadline: document.getElementById('editDeadline').value.trim()||DEF.deadline,
+    msg: document.getElementById('editMsg').value.trim()||DEF.msg
+  });
+  alert('✅ 발송 정보가 저장되었어요!');
+}
+
+renderOrder();
+</script>
+</body>
+</html>
