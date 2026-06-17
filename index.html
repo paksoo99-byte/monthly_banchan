@@ -154,6 +154,7 @@
     <div id="tab-orders">
       <div class="admin-stats" id="adminStats"></div>
       <div id="adminOrders"></div>
+      <button class="save-btn" onclick="downloadCSV()" style="margin-bottom:8px;">📥 엑셀(CSV)로 다운로드</button>
       <button class="danger-btn" onclick="clearOrders()">🗑 전체 주문 초기화</button>
     </div>
 
@@ -267,6 +268,8 @@ function updateSoupBadge() {
   else { b.textContent='1개 고르세요'; b.className='count-badge'; }
 }
 
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwT--G_HyhflZIY-uxiy_YsTRrbtieTPZADCU8h1zzzAfEMMEj43Rpo82R5-YvcDZYkyg/exec';
+
 function submitOrder() {
   const name=document.getElementById('customerName').value.trim();
   const soup=document.querySelector('input[name=soup]:checked');
@@ -275,16 +278,37 @@ function submitOrder() {
   if(!name){ alert('이름을 입력해주세요!'); return; }
   if(!soup){ alert('국·찌개를 1개 선택해주세요!'); return; }
   if(sides.length!==sc){ alert('반찬을 정확히 '+sc+'개 선택해주세요! (현재 '+sides.length+'개)'); return; }
+
+  const orderData = { name, soup: soup.value, sides, time: new Date().toLocaleString('ko-KR') };
+
+  // 로컬 저장
   const orders=getOrders();
-  orders.push({name, soup:soup.value, sides, time:new Date().toLocaleString('ko-KR')});
+  orders.push(orderData);
   sv('bc_orders', orders);
+
+  // 완료 화면 먼저 보여주기
   document.getElementById('orderScreen').style.display='none';
   document.getElementById('doneScreen').style.display='block';
   document.getElementById('doneSummary').innerHTML=
     `<div class="row">👤 <strong>${name}</strong> 님</div>
      <div class="row">🍲 ${soup.value}</div>
      <div class="row">🥗 ${sides.join(' · ')}</div>
-     <div class="row" style="color:var(--muted);font-size:11px;">⏰ ${new Date().toLocaleString('ko-KR')}</div>`;
+     <div class="row" style="color:var(--muted);font-size:11px;">⏰ ${orderData.time}</div>
+     <div class="row" id="sheetStatus" style="font-size:12px;color:var(--muted);">📤 구글 시트에 저장 중...</div>`;
+
+  // 구글 시트에 전송
+  fetch(SHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(orderData)
+  }).then(() => {
+    const el = document.getElementById('sheetStatus');
+    if(el) el.innerHTML = '✅ 구글 시트에 저장 완료!';
+  }).catch(() => {
+    const el = document.getElementById('sheetStatus');
+    if(el) el.innerHTML = '⚠️ 시트 저장 실패 (인터넷 확인)';
+  });
 }
 
 function resetOrder() {
@@ -322,8 +346,8 @@ function renderOrders() {
   const orders=getOrders();
   document.getElementById('adminStats').textContent='총 '+orders.length+'명 주문 완료';
   const box=document.getElementById('adminOrders');
-  if(!orders.length){ box.innerHTML='<div class="empty-admin">아직 주문이 없어요 🥺</div>'; return; }
-  box.innerHTML=orders.map(o=>
+  if(!orders.length){ box.innerHTML='<div class="empty-admin">아직 주문이 없어요 🥺<br><span style="font-size:12px;">고객이 주문하면 여기에 표시돼요</span></div>'; return; }
+  box.innerHTML=orders.map((o,i)=>
     `<div class="order-card">
       <div class="order-name"><span>👤 ${o.name}</span><span class="order-time">${o.time}</span></div>
       <div class="order-items">🍲 <span>${o.soup}</span><br>🥗 <span>${o.sides.join(', ')}</span></div>
@@ -332,6 +356,27 @@ function renderOrders() {
 }
 function clearOrders() {
   if(confirm('전체 주문을 초기화할까요?')){ sv('bc_orders',[]); renderOrders(); }
+}
+function downloadCSV() {
+  const orders=getOrders();
+  if(!orders.length){ alert('아직 주문이 없어요!'); return; }
+  const sc=getSC();
+  // 헤더
+  let header=['주문시간','이름','국·찌개'];
+  for(let i=1;i<=sc;i++) header.push('반찬'+i);
+  const rows=[header];
+  orders.forEach(o=>{
+    const row=[o.time, o.name, o.soup];
+    for(let i=0;i<sc;i++) row.push(o.sides[i]||'');
+    rows.push(row);
+  });
+  // BOM + CSV
+  const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='반찬주문_'+new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','')+'xlsx.csv';
+  a.click(); URL.revokeObjectURL(url);
 }
 
 // 메뉴 편집
