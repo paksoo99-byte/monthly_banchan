@@ -5,440 +5,1323 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>우리가족반찬 주문하기</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #FDF8F2; --card: #FFFFFF; --accent: #C85A2A; --accent-soft: #F5E6DC;
-    --accent2: #3A7D44; --accent2-soft: #E0F0E3; --text: #2A1F1A;
-    --muted: #8C7B73; --border: #E8DDD6; --shadow: 0 2px 12px rgba(42,31,26,0.08);
+    --bg: #FFFDF7;
+    --surface: #FFFFFF;
+    --surface2: #F7F4EE;
+    --primary: #5C7A4E;
+    --primary-light: #E8F0E4;
+    --primary-dark: #3D5435;
+    --accent: #C8753A;
+    --accent-light: #FDF0E8;
+    --text: #2C2C2C;
+    --text-muted: #7A7A7A;
+    --border: #E0DAD0;
+    --radius: 14px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
-  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 60px; }
-  .header { background: var(--accent); color: #fff; padding: 28px 20px 22px; text-align: center; }
-  .header .badge { display: inline-block; background: rgba(255,255,255,0.22); border-radius: 20px; padding: 3px 14px; font-size: 12px; font-weight: 500; margin-bottom: 10px; }
-  .header h1 { font-size: 22px; font-weight: 900; line-height: 1.3; }
-  .header .sub { margin-top: 6px; font-size: 13px; opacity: 0.88; }
-  .header .deadline { margin-top: 12px; background: rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 16px; font-size: 13px; display: inline-block; }
-  .main { max-width: 480px; margin: 0 auto; padding: 20px 16px 0; }
-  .name-section, .section-card { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
-  .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 10px; }
-  .name-input { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 16px; font-family: inherit; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.2s; }
-  .name-input:focus { border-color: var(--accent); }
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-  .section-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
-  .count-badge { font-size: 12px; font-weight: 700; background: var(--accent-soft); color: var(--accent); border-radius: 20px; padding: 3px 10px; }
-  .count-badge.green { background: var(--accent2-soft); color: var(--accent2); }
-  .count-badge.warn { background: #FDE8E8; color: #C0392B; }
-  .menu-list { display: flex; flex-direction: column; gap: 8px; }
-  .menu-item { position: relative; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ── 헤더 ── */
+  .header {
+    background: var(--primary);
+    color: white;
+    text-align: center;
+    padding: 24px 20px 20px;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; }
+  .header .sub { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+
+  /* ── 섹션 ── */
+  .section {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin: 14px 16px;
+    padding: 18px 16px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── 주문자 정보 ── */
+  .info-grid { display: flex; flex-direction: column; gap: 10px; }
+  .info-field { display: flex; flex-direction: column; gap: 4px; }
+  .info-field label { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+  .info-field input, .info-field textarea {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--surface2);
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .info-field input:focus, .info-field textarea:focus {
+    border-color: var(--primary);
+    background: white;
+  }
+  .info-field textarea { resize: none; height: 70px; }
+
+  /* ── 메뉴 선택 ── */
+  .menu-category { margin-bottom: 4px; }
+  .menu-category-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .menu-limit-badge {
+    display: inline-block;
+    font-size: 10px;
+    background: var(--accent-light);
+    color: var(--accent);
+    border-radius: 10px;
+    padding: 2px 8px;
+    margin-left: 6px;
+    font-weight: 600;
+  }
+  .menu-items { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s;
+    background: var(--surface2);
+    user-select: none;
+    position: relative;
+  }
+  .menu-item:active { transform: scale(0.98); }
+  .menu-item.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
   .menu-item input { display: none; }
-  .menu-item label { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.18s; font-size: 14px; font-weight: 500; user-select: none; background: var(--bg); }
-  .menu-item label:active { transform: scale(0.98); }
-  .dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.18s; }
-  .dot::after { content: ''; width: 9px; height: 9px; border-radius: 50%; background: #fff; opacity: 0; transition: opacity 0.15s; }
-  .menu-item input[type=radio]:checked + label { border-color: var(--accent); background: var(--accent-soft); }
-  .menu-item input[type=radio]:checked + label .dot { background: var(--accent); border-color: var(--accent); }
-  .menu-item input[type=radio]:checked + label .dot::after { opacity: 1; }
-  .box { width: 20px; height: 20px; border-radius: 5px; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.18s; font-size: 12px; }
-  .menu-item input[type=checkbox]:checked + label { border-color: var(--accent2); background: var(--accent2-soft); }
-  .menu-item input[type=checkbox]:checked + label .box { background: var(--accent2); border-color: var(--accent2); color: #fff; }
-  .menu-item input[type=checkbox]:disabled + label { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
-  .submit-btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 14px; padding: 16px; font-size: 17px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 4px; transition: background 0.18s, transform 0.12s; box-shadow: 0 4px 16px rgba(200,90,42,0.3); }
-  .submit-btn:active { transform: scale(0.98); }
-  .admin-link { display: block; text-align: center; margin-top: 24px; color: var(--muted); font-size: 12px; cursor: pointer; }
-  .notice { background: #FFF8E7; border-left: 3px solid #F5A623; border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 12px; color: #7A5C00; margin-bottom: 14px; line-height: 1.5; }
-  .done-screen { display: none; text-align: center; padding: 40px 20px; }
-  .done-screen .emoji { font-size: 60px; margin-bottom: 16px; }
-  .done-screen h2 { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
-  .done-screen p { color: var(--muted); font-size: 14px; line-height: 1.6; }
-  .done-summary { background: var(--card); border-radius: 14px; padding: 18px; margin-top: 20px; text-align: left; box-shadow: var(--shadow); }
-  .done-summary .row { font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--border); }
-  .done-summary .row:last-child { border-bottom: none; }
-  .admin-screen { display: none; }
-  .admin-header { background: #2A1F1A; color: #fff; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; }
-  .admin-header h2 { font-size: 16px; font-weight: 700; }
-  .admin-back { font-size: 13px; color: rgba(255,255,255,0.7); cursor: pointer; background: none; border: none; font-family: inherit; }
-  .admin-body { padding: 16px; max-width: 480px; margin: 0 auto; }
-  .admin-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-  .admin-tab { flex: 1; padding: 10px 4px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--card); font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer; color: var(--muted); transition: all 0.18s; }
-  .admin-tab.active { background: #2A1F1A; color: #fff; border-color: #2A1F1A; }
-  .admin-stats { background: var(--accent); color: #fff; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; font-size: 14px; font-weight: 700; }
-  .order-card { background: var(--card); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow); }
-  .order-name { font-weight: 700; font-size: 15px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
-  .order-time { font-size: 11px; color: var(--muted); }
-  .order-items { font-size: 13px; color: var(--muted); line-height: 1.7; }
-  .order-items span { color: var(--text); font-weight: 500; }
-  .empty-admin { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 14px; }
-  .danger-btn { width: 100%; background: #FDE8E8; color: #C0392B; border: none; border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 10px; }
-  .edit-section { background: var(--card); border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow); }
-  .edit-section-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
-  .edit-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .edit-item input[type=text] { flex: 1; border: 1.5px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; background: var(--bg); outline: none; }
-  .edit-item input[type=text]:focus { border-color: var(--accent); }
-  .del-btn { width: 32px; height: 32px; border: none; border-radius: 8px; background: #FDE8E8; color: #C0392B; font-size: 16px; cursor: pointer; flex-shrink: 0; }
-  .dup-btn { font-size: 11px; padding: 5px 8px; border: 1.5px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--muted); cursor: pointer; flex-shrink: 0; font-family: inherit; white-space: nowrap; }
-  .dup-btn.on { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
-  .add-row { display: flex; gap: 8px; margin-top: 4px; }
-  .add-input { flex: 1; border: 1.5px dashed var(--border); border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; background: transparent; outline: none; color: var(--text); }
-  .add-input:focus { border-color: var(--accent2); border-style: solid; }
-  .add-btn { padding: 9px 16px; background: var(--accent2); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; }
-  .save-btn { width: 100%; background: #2A1F1A; color: #fff; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 4px; }
-  .info-row { margin-bottom: 12px; }
-  .info-row label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
-  .info-row input { width: 100%; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; background: var(--bg); outline: none; }
-  .info-row input:focus { border-color: var(--accent); }
-  .cnt-row { display: flex; align-items: center; gap: 10px; font-size: 14px; }
-  .cnt-row input { width: 65px; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; background: var(--bg); outline: none; }
+  .menu-item-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    margin-right: 12px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.18s;
+    background: white;
+  }
+  .menu-item.selected .menu-item-check {
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+  .menu-item.selected .menu-item-check::after {
+    content: '✓';
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .menu-item-name { font-size: 14px; font-weight: 500; flex: 1; }
+  .no-dup-tag {
+    font-size: 10px;
+    background: #FFF3E0;
+    color: #E65100;
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-weight: 600;
+  }
+
+  /* ── 제출 버튼 ── */
+  .submit-btn {
+    width: calc(100% - 32px);
+    margin: 0 16px 0;
+    padding: 16px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.3px;
+  }
+  .submit-btn:active { background: var(--primary-dark); transform: scale(0.99); }
+
+  /* ── 완료 화면 ── */
+  .done-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .done-icon { font-size: 52px; margin-bottom: 16px; }
+  .done-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .done-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+  .done-summary {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+  .retry-btn {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text);
+  }
+
+  /* ── 관리자 ── */
+  .admin-toggle {
+    text-align: center;
+    margin: 20px 16px 0;
+  }
+  .admin-toggle button {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 7px 18px;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+
+  .admin-panel {
+    display: none;
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin: 14px 16px;
+    padding: 18px 16px;
+  }
+  .admin-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .admin-tab {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--surface2);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .admin-tab.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+  }
+  .admin-content { display: none; }
+  .admin-content.active { display: block; }
+
+  /* ── 주문 현황 ── */
+  .order-count-badge {
+    display: inline-block;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 2px 8px;
+    margin-left: 6px;
+  }
+
+  /* 반찬별 집계 */
+  .item-summary {
+    margin-bottom: 16px;
+  }
+  .item-summary-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .item-tally {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .tally-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  .tally-name { flex: 1; font-weight: 500; }
+  .tally-bar-wrap {
+    flex: 2;
+    height: 6px;
+    background: var(--border);
+    border-radius: 4px;
+    margin: 0 10px;
+    overflow: hidden;
+  }
+  .tally-bar {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .tally-num {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 12px 0;
+  }
+
+  /* 주문 카드 */
+  .order-card {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .order-card-name { font-weight: 700; font-size: 14px; }
+  .order-card-time { font-size: 11px; color: var(--text-muted); }
+  .order-card-detail { color: var(--text-muted); }
+  .order-card-menus { font-weight: 500; margin-top: 2px; }
+  .delete-order-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    color: #999;
+    margin-top: 6px;
+  }
+
+  /* 메뉴 편집 */
+  .edit-list { display: flex; flex-direction: column; gap: 6px; }
+  .edit-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  .edit-item span { flex: 1; }
+  .edit-item button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: #bbb;
+    padding: 0 4px;
+  }
+  .add-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .add-row input {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+  }
+  .add-row input:focus { border-color: var(--primary); }
+  .add-row button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .no-dup-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    cursor: pointer;
+  }
+
+  /* 발송 정보 */
+  .field-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+  .field-group label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 2px; display: block; }
+  .field-group input, .field-group textarea {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    background: var(--surface2);
+    width: 100%;
+  }
+  .field-group input:focus, .field-group textarea:focus {
+    border-color: var(--primary);
+    background: white;
+  }
+
+  .save-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+
+  .danger-btn {
+    width: 100%;
+    padding: 11px;
+    background: none;
+    color: #C0392B;
+    border: 1.5px solid #E8B8B2;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+
+  .download-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 8px;
+  }
+
+  .empty-msg {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 20px 0;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: #2C2C2C;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .count-select {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .count-select input[type=number] {
+    width: 60px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 14px;
+    text-align: center;
+    outline: none;
+    background: var(--surface2);
+  }
+
+  /* ── 비밀번호 모달 ── */
+  .pw-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .pw-overlay.show { display: flex; }
+  .pw-modal {
+    background: white;
+    border-radius: 18px;
+    padding: 28px 24px 24px;
+    width: 300px;
+    max-width: 90vw;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    text-align: center;
+    animation: popIn 0.2s ease;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+  .pw-icon { font-size: 36px; margin-bottom: 10px; }
+  .pw-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .pw-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; }
+  .pw-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .pw-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: white;
+    transition: all 0.15s;
+  }
+  .pw-dot.filled { background: var(--primary); border-color: var(--primary); }
+  .pw-dot.error  { background: #E74C3C; border-color: #E74C3C; }
+  .pw-keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .pw-key {
+    padding: 14px 0;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--surface2);
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.12s, transform 0.08s;
+    user-select: none;
+  }
+  .pw-key:active { background: var(--primary-light); transform: scale(0.95); }
+  .pw-key.del { font-size: 14px; color: var(--text-muted); }
+  .pw-key.empty { border: none; background: none; cursor: default; }
+  .pw-cancel {
+    margin-top: 14px;
+    background: none;
+    border: none;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .pw-error-msg {
+    font-size: 12px;
+    color: #E74C3C;
+    min-height: 16px;
+    margin-bottom: 6px;
+  }
+
+  /* 비밀번호 변경 섹션 */
+  .pw-change-box {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 8px;
+  }
+  .pw-change-box label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .pw-change-box input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-align: center;
+    outline: none;
+    background: white;
+    margin-bottom: 8px;
+    font-family: inherit;
+  }
+  .pw-change-box input:focus { border-color: var(--primary); }
 </style>
 </head>
 <body>
 
-<!-- 주문 화면 -->
-<div id="orderScreen">
-  <div class="header">
-    <div class="badge" id="hBadge"></div>
-    <h1>이번 주 반찬을<br>골라주세요 🥢</h1>
-    <div class="sub" id="hSub"></div>
-    <div class="deadline" id="hDeadline"></div>
+<!-- 비밀번호 모달 -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-modal">
+    <div class="pw-icon">🔐</div>
+    <div class="pw-title">관리자 비밀번호</div>
+    <div class="pw-sub">4자리 숫자를 입력해 주세요</div>
+    <div class="pw-dots" id="pwDots">
+      <div class="pw-dot" id="dot0"></div>
+      <div class="pw-dot" id="dot1"></div>
+      <div class="pw-dot" id="dot2"></div>
+      <div class="pw-dot" id="dot3"></div>
+    </div>
+    <div class="pw-error-msg" id="pwErrorMsg"></div>
+    <div class="pw-keypad">
+      <button class="pw-key" onclick="pwInput('1')">1</button>
+      <button class="pw-key" onclick="pwInput('2')">2</button>
+      <button class="pw-key" onclick="pwInput('3')">3</button>
+      <button class="pw-key" onclick="pwInput('4')">4</button>
+      <button class="pw-key" onclick="pwInput('5')">5</button>
+      <button class="pw-key" onclick="pwInput('6')">6</button>
+      <button class="pw-key" onclick="pwInput('7')">7</button>
+      <button class="pw-key" onclick="pwInput('8')">8</button>
+      <button class="pw-key" onclick="pwInput('9')">9</button>
+      <button class="pw-key empty"></button>
+      <button class="pw-key" onclick="pwInput('0')">0</button>
+      <button class="pw-key del" onclick="pwDelete()">⌫</button>
+    </div>
+    <button class="pw-cancel" onclick="closePwModal()">취소</button>
   </div>
-  <div class="main">
-    <div class="name-section">
-      <div class="section-label">주문자 이름</div>
-      <input class="name-input" type="text" id="customerName" placeholder="이름을 입력하세요" maxlength="20">
-    </div>
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-title"><span>🍲</span> 국·찌개</div>
-        <div class="count-badge" id="soupBadge">1개 고르세요</div>
+</div>
+
+<!-- 헤더 -->
+<div class="header">
+  <div class="header-badge" id="headerBadge">우리가족반찬</div>
+  <h1>이번 주 반찬을 골라주세요 🥢</h1>
+  <div class="sub" id="headerSub">발송일을 확인해 주세요</div>
+</div>
+
+<!-- 주문 폼 -->
+<div id="orderForm">
+  <!-- 주문자 정보 -->
+  <div class="section">
+    <div class="section-title">👤 주문자 정보</div>
+    <div class="info-grid">
+      <div class="info-field">
+        <label>이름 *</label>
+        <input type="text" id="custName" placeholder="홍길동">
       </div>
-      <div class="menu-list" id="soupList"></div>
-    </div>
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-title"><span>🥗</span> 반찬</div>
-        <div class="count-badge green" id="sideBadge"></div>
+      <div class="info-field">
+        <label>핸드폰 번호 *</label>
+        <input type="tel" id="custPhone" placeholder="010-0000-0000">
       </div>
-      <div class="notice" id="dupNotice" style="display:none">⚠️ 중복 선택 불가 품목이 포함되어 있어요.</div>
-      <div class="menu-list" id="sideList"></div>
+      <div class="info-field">
+        <label>배송 주소 *</label>
+        <textarea id="custAddr" placeholder="예) 인천시 연수구 OO동 OO아파트 OO호"></textarea>
+      </div>
+      <div class="info-field">
+        <label>신청 회차 *</label>
+        <input type="text" id="custRound" placeholder="예) 1회차, 2회차">
+      </div>
     </div>
-    <button class="submit-btn" onclick="submitOrder()">주문 완료하기 →</button>
-    <a class="admin-link" onclick="showAdmin()">🔑 관리자 모드</a>
+  </div>
+
+  <!-- 국·찌개 -->
+  <div class="section" id="soupSection">
+    <div class="section-title">🍲 국·찌개</div>
+    <div class="menu-category-title">1개 고르세요</div>
+    <div class="menu-items" id="soupItems"></div>
+  </div>
+
+  <!-- 반찬 -->
+  <div class="section" id="banchanSection">
+    <div class="section-title">🥗 반찬</div>
+    <div class="menu-category-title" id="banchanLimit">선택해 주세요</div>
+    <div id="banchanNodupWarning" style="font-size:12px;color:var(--accent);margin-bottom:8px;display:none;">⚠️ 중복 선택 불가 품목이 포함되어 있어요.</div>
+    <div class="menu-items" id="banchanItems"></div>
+  </div>
+
+  <button class="submit-btn" onclick="submitOrder()">주문 완료하기 →</button>
+
+  <div class="admin-toggle">
+    <button onclick="toggleAdmin()">🔑 관리자 모드</button>
   </div>
 </div>
 
 <!-- 완료 화면 -->
-<div id="doneScreen" class="done-screen">
-  <div class="main">
-    <div class="emoji">🎉</div>
-    <h2>주문 완료!</h2>
-    <p>선택하신 내용이 저장되었어요.<br>발송일에 맛있는 반찬 기대하세요 😊</p>
-    <div class="done-summary" id="doneSummary"></div>
-    <button class="submit-btn" style="margin-top:20px;" onclick="resetOrder()">다시 주문하기</button>
-    <a class="admin-link" onclick="showAdmin()">🔑 관리자 모드</a>
+<div id="doneScreen" class="section done-screen">
+  <div class="done-icon">🎉</div>
+  <div class="done-title">주문 완료!</div>
+  <div class="done-sub">선택하신 내용이 저장되었어요.<br>발송일에 맛있는 반찬 기대하세요 😊</div>
+  <div class="done-summary" id="doneSummary"></div>
+  <button class="retry-btn" onclick="resetOrder()">다시 주문하기</button>
+  <div class="admin-toggle" style="margin-top:14px;">
+    <button onclick="toggleAdmin()">🔑 관리자 모드</button>
   </div>
 </div>
 
-<!-- 관리자 화면 -->
-<div id="adminScreen" class="admin-screen">
-  <div class="admin-header">
-    <h2>⚙️ 관리자 모드</h2>
-    <button class="admin-back" onclick="hideAdmin()">← 닫기</button>
+<!-- 관리자 패널 -->
+<div class="admin-panel" id="adminPanel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+    <div style="font-size:15px;font-weight:700;">⚙️ 관리자 모드</div>
+    <button onclick="toggleAdmin()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;">✕</button>
   </div>
-  <div class="admin-body">
-    <div class="admin-tabs">
-      <button class="admin-tab active" onclick="switchTab('orders')">📋 주문현황</button>
-      <button class="admin-tab" onclick="switchTab('menu')">✏️ 메뉴편집</button>
-      <button class="admin-tab" onclick="switchTab('info')">📅 발송정보</button>
+
+  <div class="admin-tabs">
+    <div class="admin-tab active" onclick="switchTab('orders')">📋 주문현황</div>
+    <div class="admin-tab" onclick="switchTab('menu')">✏️ 메뉴편집</div>
+    <div class="admin-tab" onclick="switchTab('delivery')">📅 발송정보</div>
+  </div>
+
+  <!-- 주문현황 탭 -->
+  <div class="admin-content active" id="tab-orders">
+    <button class="download-btn" onclick="downloadCSV()">📥 엑셀(CSV)로 다운로드</button>
+
+    <!-- 반찬별 집계 -->
+    <div class="item-summary" id="itemSummaryArea">
+      <div class="item-summary-title">🔢 반찬별 총 주문 수</div>
+      <div class="item-tally" id="itemTallyList"></div>
     </div>
 
-    <!-- 주문현황 -->
-    <div id="tab-orders">
-      <div class="admin-stats" id="adminStats"></div>
-      <div id="adminOrders"></div>
-      <button class="save-btn" onclick="downloadCSV()" style="margin-bottom:8px;">📥 엑셀(CSV)로 다운로드</button>
-      <button class="danger-btn" onclick="clearOrders()">🗑 전체 주문 초기화</button>
+    <hr class="divider">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div class="section-title" style="margin:0;">주문 목록 <span class="order-count-badge" id="orderCountBadge">0건</span></div>
+      <button class="danger-btn" style="width:auto;padding:5px 12px;font-size:12px;margin:0;" onclick="clearOrders()">🗑 전체 초기화</button>
+    </div>
+    <div id="orderList"></div>
+  </div>
+
+  <!-- 메뉴편집 탭 -->
+  <div class="admin-content" id="tab-menu">
+    <div class="section-title" style="margin-bottom:10px;">🍲 국·찌개 목록</div>
+    <div class="edit-list" id="soupEditList"></div>
+    <div class="add-row">
+      <input type="text" id="newSoupInput" placeholder="메뉴 이름">
+      <button onclick="addSoupMenu()">+ 추가</button>
     </div>
 
-    <!-- 메뉴편집 -->
-    <div id="tab-menu" style="display:none">
-      <div class="edit-section">
-        <div class="edit-section-title">🍲 국·찌개 목록</div>
-        <div id="editSoupList"></div>
-        <div class="add-row">
-          <input class="add-input" id="newSoup" placeholder="새 국·찌개 이름...">
-          <button class="add-btn" onclick="addSoup()">+ 추가</button>
-        </div>
-      </div>
-      <div class="edit-section">
-        <div class="edit-section-title">🥗 반찬 목록</div>
-        <div id="editSideList"></div>
-        <div class="add-row">
-          <input class="add-input" id="newSide" placeholder="새 반찬 이름...">
-          <button class="add-btn" onclick="addSide()">+ 추가</button>
-        </div>
-      </div>
-      <div class="edit-section">
-        <div class="edit-section-title">🔢 반찬 선택 개수</div>
-        <div class="cnt-row">
-          <span>고객이 선택해야 할 반찬 수</span>
-          <input type="number" id="sideCountInput" min="1" max="20" value="5">
-          <span style="color:var(--muted)">개</span>
-        </div>
-      </div>
-      <button class="save-btn" onclick="saveMenu()">✅ 메뉴 저장하기</button>
+    <hr class="divider">
+
+    <div class="section-title" style="margin:12px 0 10px;">🥗 반찬 목록</div>
+    <div class="edit-list" id="banchanEditList"></div>
+    <div class="add-row" style="flex-wrap:wrap;gap:6px;">
+      <input type="text" id="newBanchanInput" placeholder="메뉴 이름" style="flex:1;min-width:120px;">
+      <label class="no-dup-check">
+        <input type="checkbox" id="newBanchanNoDup">
+        중복선택불가
+      </label>
+      <button onclick="addBanchanMenu()" style="white-space:nowrap;">+ 추가</button>
     </div>
 
-    <!-- 발송정보 -->
-    <div id="tab-info" style="display:none">
-      <div class="edit-section">
-        <div class="edit-section-title">📅 이번 주 발송 정보</div>
-        <div class="info-row">
-          <label>상단 배지 (예: 우리가족반찬 2025년 5월 · 2회차)</label>
-          <input type="text" id="editBadge">
-        </div>
-        <div class="info-row">
-          <label>발송일</label>
-          <input type="text" id="editDeadline" placeholder="예: 6월 18일">
-        </div>
-        <div class="info-row">
-          <label>안내 문구</label>
-          <input type="text" id="editMsg" placeholder="예: 빨리 안 고르시면 제가 마음대로 보냅니다 😮‍💨">
-        </div>
-      </div>
-      <button class="save-btn" onclick="saveInfo()">✅ 발송 정보 저장</button>
+    <hr class="divider">
+
+    <div class="section-title" style="margin:12px 0 8px;">🔢 반찬 선택 개수</div>
+    <div class="count-select">
+      <span style="font-size:13px;">고객이 선택해야 할 반찬 수</span>
+      <input type="number" id="banchanCountInput" min="1" max="10" value="3">
+      <span style="font-size:13px;">개</span>
+    </div>
+
+    <button class="save-btn" onclick="saveMenus()" style="margin-top:14px;">✅ 메뉴 저장하기</button>
+  </div>
+
+  <!-- 발송정보 탭 -->
+  <div class="admin-content" id="tab-delivery">
+    <div class="field-group">
+      <label>상단 배지 (예: 우리가족반찬 2025년 5월 · 2회차)</label>
+      <input type="text" id="badgeInput" placeholder="우리가족반찬 2025년 5월 · 2회차">
+    </div>
+    <div class="field-group">
+      <label>발송일</label>
+      <input type="date" id="deliveryDate">
+    </div>
+    <div class="field-group">
+      <label>안내 문구</label>
+      <textarea id="deliveryNote" placeholder="예) 이번 주 발송은 화요일 오전입니다." style="height:70px;resize:none;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;outline:none;background:var(--surface2);width:100%;"></textarea>
+    </div>
+    <button class="save-btn" onclick="saveDelivery()">✅ 발송 정보 저장</button>
+
+    <hr class="divider" style="margin-top:16px;">
+    <div class="section-title" style="margin:12px 0 8px;">🔐 관리자 비밀번호 변경</div>
+    <div class="pw-change-box">
+      <label>새 비밀번호 (4자리 숫자)</label>
+      <input type="password" id="newPwInput" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••">
+      <label>새 비밀번호 확인</label>
+      <input type="password" id="newPwConfirm" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••">
+      <button class="save-btn" onclick="changePassword()" style="margin-top:4px;">🔑 비밀번호 변경</button>
     </div>
   </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-const DEF = {
-  badge: '우리가족반찬 2025년 5월 · 1회차',
-  deadline: '6월 11일',
-  msg: '빨리 안 고르시면 제가 마음대로 보냅니다 😮‍💨',
-  soups: ['쇠고기미역국','쇠고기샤브샤브','우렁된장찌개 밀키트','청국장','24시 콩나물국','콩비지찌개','아욱국','해물순두부찌개'],
-  sides: [
-    {name:'햇생깻잎',nd:false},{name:'웰빙견과조림',nd:false},{name:'도라지오이무침',nd:false},
-    {name:'토마토김치',nd:true},{name:'나물1',nd:false},{name:'우엉채어묵채',nd:false},
-    {name:'마른반찬',nd:false},{name:'쇠고기카레',nd:true},{name:'손가락동치미',nd:false},{name:'브로콜리햄볶음',nd:false}
+// ── 데이터 스토어 ──
+let store = {
+  soups: ['된장찌개', '순두부찌개', '김치찌개', '미역국'],
+  banchans: [
+    {name:'시금치나물', noDup:false},
+    {name:'콩나물무침', noDup:false},
+    {name:'감자조림', noDup:false},
+    {name:'제육볶음', noDup:true},
+    {name:'오징어볶음', noDup:true},
+    {name:'닭갈비', noDup:true},
   ],
-  sideCount: 5
+  banchanCount: 3,
+  orders: [],
+  badge: '우리가족반찬',
+  deliveryDate: '',
+  deliveryNote: '발송일에 맛있는 반찬을 보내드려요 😊'
 };
 
-const ld = (k,d) => { try { const v=localStorage.getItem(k); return v?JSON.parse(v):d; } catch{ return d; }};
-const sv = (k,v) => localStorage.setItem(k, JSON.stringify(v));
-const getInfo = () => ld('bc_info', {badge:DEF.badge, deadline:DEF.deadline, msg:DEF.msg});
-const getSoups = () => ld('bc_soups', DEF.soups);
-const getSides = () => ld('bc_sides', DEF.sides);
-const getSC = () => ld('bc_sc', DEF.sideCount);
-const getOrders = () => ld('bc_orders', []);
-
-function renderOrder() {
-  const info=getInfo(), soups=getSoups(), sides=getSides(), sc=getSC();
-  const hasDup = sides.some(s=>s.nd);
-  document.getElementById('hBadge').textContent = '🏠 ' + info.badge;
-  document.getElementById('hSub').textContent = '국·찌개 1개 + 반찬 ' + sc + '개 선택';
-  document.getElementById('hDeadline').innerHTML = '📦 발송일 <strong>' + info.deadline + '</strong> · ' + info.msg;
-  document.getElementById('sideBadge').textContent = sc + '개 고르세요';
-  document.getElementById('dupNotice').style.display = hasDup ? '' : 'none';
-
-  document.getElementById('soupList').innerHTML = soups.map((s,i) =>
-    `<div class="menu-item"><input type="radio" name="soup" id="s${i}" value="${s}">
-     <label for="s${i}"><span class="dot"></span>${s}</label></div>`
-  ).join('');
-
-  document.getElementById('sideList').innerHTML = sides.map((s,i) =>
-    `<div class="menu-item"><input type="checkbox" id="b${i}" value="${s.name}">
-     <label for="b${i}"><span class="box">✓</span>${s.name}${s.nd?'<span style="color:var(--accent);font-size:11px;margin-left:6px;">중복불가</span>':''}</label></div>`
-  ).join('');
-
-  document.querySelectorAll('#sideList input[type=checkbox]').forEach(c=>c.addEventListener('change', updateSideBadge));
-  document.querySelectorAll('input[name=soup]').forEach(r=>r.addEventListener('change', updateSoupBadge));
+function load() {
+  const saved = localStorage.getItem('banchan_store');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      store = { ...store, ...parsed };
+    } catch(e) {}
+  }
 }
 
-function updateSideBadge() {
-  const sc=getSC(), checks=[...document.querySelectorAll('#sideList input[type=checkbox]')];
-  const cnt=checks.filter(c=>c.checked).length, b=document.getElementById('sideBadge');
-  checks.forEach(c=>{ if(!c.checked) c.disabled=cnt>=sc; });
-  if(cnt===sc){ b.className='count-badge green'; b.textContent='✅ '+sc+'개 완료'; }
-  else if(cnt>sc){ b.className='count-badge warn'; b.textContent=cnt+'개 (초과!)'; }
-  else { b.className='count-badge green'; b.textContent=cnt+' / '+sc+'개'; }
-}
-function updateSoupBadge() {
-  const sel=document.querySelector('input[name=soup]:checked'), b=document.getElementById('soupBadge');
-  if(sel){ b.textContent='✅ 선택 완료'; b.className='count-badge green'; }
-  else { b.textContent='1개 고르세요'; b.className='count-badge'; }
+function save() {
+  localStorage.setItem('banchan_store', JSON.stringify(store));
 }
 
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwT--G_HyhflZIY-uxiy_YsTRrbtieTPZADCU8h1zzzAfEMMEj43Rpo82R5-YvcDZYkyg/exec';
+// ── 렌더링 ──
+function renderHeader() {
+  document.getElementById('headerBadge').textContent = store.badge || '우리가족반찬';
+  if (store.deliveryDate) {
+    const d = new Date(store.deliveryDate);
+    const fmt = `${d.getMonth()+1}월 ${d.getDate()}일 발송`;
+    document.getElementById('headerSub').textContent = store.deliveryNote ? `${fmt} · ${store.deliveryNote}` : fmt;
+  } else {
+    document.getElementById('headerSub').textContent = store.deliveryNote || '발송일을 확인해 주세요';
+  }
+}
 
-function submitOrder() {
-  const name=document.getElementById('customerName').value.trim();
-  const soup=document.querySelector('input[name=soup]:checked');
-  const sides=[...document.querySelectorAll('#sideList input[type=checkbox]')].filter(c=>c.checked).map(c=>c.value);
-  const sc=getSC();
-  if(!name){ alert('이름을 입력해주세요!'); return; }
-  if(!soup){ alert('국·찌개를 1개 선택해주세요!'); return; }
-  if(sides.length!==sc){ alert('반찬을 정확히 '+sc+'개 선택해주세요! (현재 '+sides.length+'개)'); return; }
+function renderMenus() {
+  // 국
+  const soupEl = document.getElementById('soupItems');
+  soupEl.innerHTML = '';
+  store.soups.forEach((s, i) => {
+    const label = document.createElement('label');
+    label.className = 'menu-item';
+    label.innerHTML = `
+      <input type="radio" name="soup" value="${s}">
+      <div class="menu-item-check"></div>
+      <span class="menu-item-name">${s}</span>
+    `;
+    label.addEventListener('click', () => {
+      document.querySelectorAll('#soupItems .menu-item').forEach(el => el.classList.remove('selected'));
+      label.classList.add('selected');
+    });
+    soupEl.appendChild(label);
+  });
 
-  const orderData = { name, soup: soup.value, sides, time: new Date().toLocaleString('ko-KR') };
+  // 반찬
+  const banchanEl = document.getElementById('banchanItems');
+  banchanEl.innerHTML = '';
+  const limit = store.banchanCount || 3;
+  document.getElementById('banchanLimit').textContent = `${limit}개 고르세요`;
 
-  // 로컬 저장
-  const orders=getOrders();
-  orders.push(orderData);
-  sv('bc_orders', orders);
+  let hasNoDup = store.banchans.some(b => b.noDup);
+  document.getElementById('banchanNodupWarning').style.display = hasNoDup ? 'block' : 'none';
 
-  // 완료 화면 먼저 보여주기
-  document.getElementById('orderScreen').style.display='none';
-  document.getElementById('doneScreen').style.display='block';
-  document.getElementById('doneSummary').innerHTML=
-    `<div class="row">👤 <strong>${name}</strong> 님</div>
-     <div class="row">🍲 ${soup.value}</div>
-     <div class="row">🥗 ${sides.join(' · ')}</div>
-     <div class="row" style="color:var(--muted);font-size:11px;">⏰ ${orderData.time}</div>
-     <div class="row" id="sheetStatus" style="font-size:12px;color:var(--muted);">📤 구글 시트에 저장 중...</div>`;
+  // 중복불가 항목들 추출
+  const noDupItems = store.banchans.filter(b => b.noDup).map(b => b.name);
+  
+  store.banchans.forEach((b, i) => {
+    const label = document.createElement('label');
+    label.className = 'menu-item';
+    label.dataset.nodup = b.noDup ? '1' : '0';
+    label.dataset.name = b.name;
+    label.innerHTML = `
+      <input type="checkbox" name="banchan" value="${b.name}">
+      <div class="menu-item-check" style="border-radius:4px;"></div>
+      <span class="menu-item-name">${b.name}</span>
+      ${b.noDup ? '<span class="no-dup-tag">중복선택불가</span>' : ''}
+    `;
+    label.addEventListener('click', (e) => {
+      e.preventDefault();
+      const checkboxes = document.querySelectorAll('#banchanItems input[type=checkbox]');
+      const thisCheckbox = label.querySelector('input');
+      const checked = document.querySelectorAll('#banchanItems input[type=checkbox]:checked');
+      const selectedNames = Array.from(checked).map(c => c.value);
 
-  // 구글 시트에 전송
-  fetch(SHEET_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(orderData)
-  }).then(() => {
-    const el = document.getElementById('sheetStatus');
-    if(el) el.innerHTML = '✅ 구글 시트에 저장 완료!';
-  }).catch(() => {
-    const el = document.getElementById('sheetStatus');
-    if(el) el.innerHTML = '⚠️ 시트 저장 실패 (인터넷 확인)';
+      if (thisCheckbox.checked) {
+        // 이미 선택된 → 해제
+        thisCheckbox.checked = false;
+        label.classList.remove('selected');
+      } else {
+        // 선택 시도
+        if (checked.length >= limit) {
+          showToast(`반찬은 최대 ${limit}개까지 선택할 수 있어요`);
+          return;
+        }
+        // 중복불가 체크
+        if (b.noDup) {
+          // 이미 중복불가 항목이 선택되어 있으면
+          const selectedNoDup = Array.from(checked).filter(c => {
+            const lbl = document.querySelector(`#banchanItems label[data-name="${c.value}"]`);
+            return lbl && lbl.dataset.nodup === '1';
+          });
+          if (selectedNoDup.length > 0) {
+            showToast('중복선택불가 항목은 하나만 고를 수 있어요');
+            return;
+          }
+        } else {
+          // 일반 항목 선택 시, 중복불가 이미 있는지 확인 불필요 (일반+중복불가 혼합 가능)
+        }
+        thisCheckbox.checked = true;
+        label.classList.add('selected');
+      }
+    });
+    banchanEl.appendChild(label);
   });
 }
 
-function resetOrder() {
-  document.getElementById('customerName').value='';
-  document.getElementById('doneScreen').style.display='none';
-  document.getElementById('orderScreen').style.display='block';
-  renderOrder();
+function renderEditLists() {
+  // 국 편집
+  const soupEdit = document.getElementById('soupEditList');
+  soupEdit.innerHTML = '';
+  store.soups.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'edit-item';
+    div.innerHTML = `<span>${s}</span><button onclick="removeSoup(${i})">✕</button>`;
+    soupEdit.appendChild(div);
+  });
+
+  // 반찬 편집
+  const banchanEdit = document.getElementById('banchanEditList');
+  banchanEdit.innerHTML = '';
+  store.banchans.forEach((b, i) => {
+    const div = document.createElement('div');
+    div.className = 'edit-item';
+    div.innerHTML = `
+      <span>${b.name}${b.noDup ? ' <span class="no-dup-tag">중복불가</span>' : ''}</span>
+      <button onclick="removeBanchan(${i})">✕</button>
+    `;
+    banchanEdit.appendChild(div);
+  });
+
+  document.getElementById('banchanCountInput').value = store.banchanCount || 3;
 }
 
-function showAdmin() {
-  document.getElementById('orderScreen').style.display='none';
-  document.getElementById('doneScreen').style.display='none';
-  document.getElementById('adminScreen').style.display='block';
-  switchTab('orders');
-}
-function hideAdmin() {
-  document.getElementById('adminScreen').style.display='none';
-  renderOrder();
-  document.getElementById('orderScreen').style.display='block';
-}
-
-function switchTab(tab) {
-  ['orders','menu','info'].forEach(t=>{
-    document.getElementById('tab-'+t).style.display=t===tab?'':'none';
-  });
-  document.querySelectorAll('.admin-tab').forEach((el,i)=>{
-    el.classList.toggle('active',['orders','menu','info'][i]===tab);
-  });
-  if(tab==='orders') renderOrders();
-  if(tab==='menu')   renderMenuEditor();
-  if(tab==='info')   renderInfoEditor();
+function renderDeliveryForm() {
+  document.getElementById('badgeInput').value = store.badge || '';
+  document.getElementById('deliveryDate').value = store.deliveryDate || '';
+  document.getElementById('deliveryNote').value = store.deliveryNote || '';
 }
 
 function renderOrders() {
-  const orders=getOrders();
-  document.getElementById('adminStats').textContent='총 '+orders.length+'명 주문 완료';
-  const box=document.getElementById('adminOrders');
-  if(!orders.length){ box.innerHTML='<div class="empty-admin">아직 주문이 없어요 🥺<br><span style="font-size:12px;">고객이 주문하면 여기에 표시돼요</span></div>'; return; }
-  box.innerHTML=orders.map((o,i)=>
-    `<div class="order-card">
-      <div class="order-name"><span>👤 ${o.name}</span><span class="order-time">${o.time}</span></div>
-      <div class="order-items">🍲 <span>${o.soup}</span><br>🥗 <span>${o.sides.join(', ')}</span></div>
-    </div>`
-  ).join('');
+  const list = document.getElementById('orderList');
+  list.innerHTML = '';
+  document.getElementById('orderCountBadge').textContent = `${store.orders.length}건`;
+
+  // 반찬별 집계
+  renderItemTally();
+
+  if (store.orders.length === 0) {
+    list.innerHTML = '<div class="empty-msg">아직 주문이 없어요</div>';
+    return;
+  }
+
+  [...store.orders].reverse().forEach((order, ri) => {
+    const i = store.orders.length - 1 - ri;
+    const div = document.createElement('div');
+    div.className = 'order-card';
+    const d = new Date(order.time);
+    const timeStr = `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+    div.innerHTML = `
+      <div class="order-card-header">
+        <div class="order-card-name">${order.name}</div>
+        <div class="order-card-time">${timeStr}</div>
+      </div>
+      <div class="order-card-detail">📱 ${order.phone || '-'}</div>
+      <div class="order-card-detail">📍 ${order.addr || '-'}</div>
+      <div class="order-card-detail">🔢 ${order.round || '-'}</div>
+      <div class="order-card-menus">🍲 ${order.soup} &nbsp;|&nbsp; 🥗 ${order.banchans.join(', ')}</div>
+      <button class="delete-order-btn" onclick="deleteOrder(${i})">삭제</button>
+    `;
+    list.appendChild(div);
+  });
 }
+
+function renderItemTally() {
+  const tallyEl = document.getElementById('itemTallyList');
+  tallyEl.innerHTML = '';
+
+  if (store.orders.length === 0) {
+    tallyEl.innerHTML = '<div class="empty-msg" style="padding:10px 0;">주문이 쌓이면 여기서 집계를 볼 수 있어요</div>';
+    return;
+  }
+
+  // 집계
+  const soupCount = {};
+  const banchanCount = {};
+
+  store.orders.forEach(order => {
+    soupCount[order.soup] = (soupCount[order.soup] || 0) + 1;
+    order.banchans.forEach(b => {
+      banchanCount[b] = (banchanCount[b] || 0) + 1;
+    });
+  });
+
+  const maxSoup = Math.max(...Object.values(soupCount));
+  const maxBanchan = Math.max(...Object.values(banchanCount));
+
+  // 국 집계
+  const soupTitle = document.createElement('div');
+  soupTitle.style.cssText = 'font-size:11px;font-weight:700;color:var(--text-muted);margin:6px 0 4px;letter-spacing:0.5px;';
+  soupTitle.textContent = '🍲 국·찌개';
+  tallyEl.appendChild(soupTitle);
+
+  Object.entries(soupCount).sort((a,b)=>b[1]-a[1]).forEach(([name, cnt]) => {
+    const row = document.createElement('div');
+    row.className = 'tally-row';
+    const pct = Math.round((cnt / maxSoup) * 100);
+    row.innerHTML = `
+      <div class="tally-name">${name}</div>
+      <div class="tally-bar-wrap"><div class="tally-bar" style="width:${pct}%;background:#7BA06A;"></div></div>
+      <div class="tally-num">${cnt}개</div>
+    `;
+    tallyEl.appendChild(row);
+  });
+
+  const banchanTitle = document.createElement('div');
+  banchanTitle.style.cssText = 'font-size:11px;font-weight:700;color:var(--text-muted);margin:10px 0 4px;letter-spacing:0.5px;';
+  banchanTitle.textContent = '🥗 반찬';
+  tallyEl.appendChild(banchanTitle);
+
+  Object.entries(banchanCount).sort((a,b)=>b[1]-a[1]).forEach(([name, cnt]) => {
+    const row = document.createElement('div');
+    row.className = 'tally-row';
+    const pct = Math.round((cnt / maxBanchan) * 100);
+    row.innerHTML = `
+      <div class="tally-name">${name}</div>
+      <div class="tally-bar-wrap"><div class="tally-bar" style="width:${pct}%;"></div></div>
+      <div class="tally-num">${cnt}개</div>
+    `;
+    tallyEl.appendChild(row);
+  });
+}
+
+// ── 주문 ──
+function submitOrder() {
+  const name = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const addr = document.getElementById('custAddr').value.trim();
+  const round = document.getElementById('custRound').value.trim();
+  if (!name) { showToast('이름을 입력해 주세요'); return; }
+  if (!phone) { showToast('핸드폰 번호를 입력해 주세요'); return; }
+  if (!addr) { showToast('배송 주소를 입력해 주세요'); return; }
+  if (!round) { showToast('신청 회차를 입력해 주세요'); return; }
+
+  const soupEl = document.querySelector('input[name="soup"]:checked');
+  if (!soupEl) { showToast('국·찌개를 선택해 주세요'); return; }
+
+  const banchanEls = document.querySelectorAll('input[name="banchan"]:checked');
+  const limit = store.banchanCount || 3;
+  if (banchanEls.length < limit) { showToast(`반찬을 ${limit}개 선택해 주세요`); return; }
+
+  const order = {
+    name,
+    phone,
+    addr,
+    round,
+    soup: soupEl.value,
+    banchans: Array.from(banchanEls).map(e => e.value),
+    time: new Date().toISOString()
+  };
+
+  store.orders.push(order);
+  save();
+
+  // 완료 화면
+  document.getElementById('orderForm').style.display = 'none';
+  const done = document.getElementById('doneScreen');
+  done.style.display = 'block';
+  document.getElementById('doneSummary').innerHTML = `
+    <b>이름:</b> ${name}<br>
+    <b>연락처:</b> ${phone}<br>
+    <b>주소:</b> ${addr}<br>
+    <b>신청 회차:</b> ${round}<br>
+    <b>국·찌개:</b> ${order.soup}<br>
+    <b>반찬:</b> ${order.banchans.join(', ')}
+  `;
+}
+
+function resetOrder() {
+  document.getElementById('orderForm').style.display = 'block';
+  document.getElementById('doneScreen').style.display = 'none';
+  document.getElementById('custName').value = '';
+  document.getElementById('custPhone').value = '';
+  document.getElementById('custAddr').value = '';
+  document.getElementById('custRound').value = '';
+  renderMenus();
+}
+
+function deleteOrder(i) {
+  if (!confirm('이 주문을 삭제할까요?')) return;
+  store.orders.splice(i, 1);
+  save();
+  renderOrders();
+}
+
 function clearOrders() {
-  if(confirm('전체 주문을 초기화할까요?')){ sv('bc_orders',[]); renderOrders(); }
+  if (!confirm('전체 주문을 초기화할까요? 되돌릴 수 없어요.')) return;
+  store.orders = [];
+  save();
+  renderOrders();
 }
+
+// ── CSV 다운로드 ──
 function downloadCSV() {
-  const orders=getOrders();
-  if(!orders.length){ alert('아직 주문이 없어요!'); return; }
-  const sc=getSC();
-  // 헤더
-  let header=['주문시간','이름','국·찌개'];
-  for(let i=1;i<=sc;i++) header.push('반찬'+i);
-  const rows=[header];
-  orders.forEach(o=>{
-    const row=[o.time, o.name, o.soup];
-    for(let i=0;i<sc;i++) row.push(o.sides[i]||'');
-    rows.push(row);
+  if (store.orders.length === 0) { showToast('주문 데이터가 없어요'); return; }
+
+  const limit = store.banchanCount || 3;
+  const headers = ['주문시간', '이름', '핸드폰', '주소', '신청회차', '국·찌개'];
+  for (let i = 1; i <= limit; i++) headers.push(`반찬${i}`);
+
+  const rows = store.orders.map(o => {
+    const d = new Date(o.time);
+    const time = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+    const row = [time, o.name, o.phone || '', o.addr || '', o.round || '', o.soup];
+    for (let i = 0; i < limit; i++) row.push(o.banchans[i] || '');
+    return row;
   });
-  // BOM + CSV
-  const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url; a.download='반찬주문_'+new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','')+'xlsx.csv';
-  a.click(); URL.revokeObjectURL(url);
+
+  // BOM for Excel Korean support
+  const BOM = '\uFEFF';
+  const csv = BOM + [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const badge = store.badge || '반찬주문';
+  const today = new Date();
+  a.download = `${badge}_${today.getFullYear()}${today.getMonth()+1}${today.getDate()}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('다운로드 완료! Excel에서 열어보세요');
 }
 
-// 메뉴 편집
-function renderMenuEditor() {
-  const soups=getSoups(), sides=getSides();
-  document.getElementById('sideCountInput').value=getSC();
-  document.getElementById('editSoupList').innerHTML=soups.map((s,i)=>
-    `<div class="edit-item">
-      <input type="text" id="sv${i}" value="${s}">
-      <button class="del-btn" onclick="delSoup(${i})">✕</button>
-    </div>`
-  ).join('');
-  document.getElementById('editSideList').innerHTML=sides.map((s,i)=>
-    `<div class="edit-item">
-      <input type="text" id="sdv${i}" value="${s.name}">
-      <button class="dup-btn ${s.nd?'on':''}" id="dup${i}" onclick="togDup(${i})">${s.nd?'중복불가 ✓':'중복가능'}</button>
-      <button class="del-btn" onclick="delSide(${i})">✕</button>
-    </div>`
-  ).join('');
+// ── 메뉴 편집 ──
+function removeSoup(i) {
+  store.soups.splice(i, 1);
+  renderEditLists();
 }
-function delSoup(i){ const s=getSoups(); s.splice(i,1); sv('bc_soups',s); renderMenuEditor(); }
-function delSide(i){ const s=getSides(); s.splice(i,1); sv('bc_sides',s); renderMenuEditor(); }
-function togDup(i){ const s=getSides(); s[i].nd=!s[i].nd; sv('bc_sides',s); renderMenuEditor(); }
-function addSoup(){
-  const v=document.getElementById('newSoup').value.trim(); if(!v) return;
-  const s=getSoups(); s.push(v); sv('bc_soups',s);
-  document.getElementById('newSoup').value=''; renderMenuEditor();
+function addSoupMenu() {
+  const v = document.getElementById('newSoupInput').value.trim();
+  if (!v) return;
+  store.soups.push(v);
+  document.getElementById('newSoupInput').value = '';
+  renderEditLists();
 }
-function addSide(){
-  const v=document.getElementById('newSide').value.trim(); if(!v) return;
-  const s=getSides(); s.push({name:v,nd:false}); sv('bc_sides',s);
-  document.getElementById('newSide').value=''; renderMenuEditor();
+function removeBanchan(i) {
+  store.banchans.splice(i, 1);
+  renderEditLists();
 }
-function saveMenu(){
-  const soups=getSoups();
-  soups.forEach((_,i)=>{ soups[i]=(document.getElementById('sv'+i)||{}).value||soups[i]; });
-  sv('bc_soups',soups);
-  const sides=getSides();
-  sides.forEach((s,i)=>{ s.name=(document.getElementById('sdv'+i)||{}).value||s.name; });
-  sv('bc_sides',sides);
-  sv('bc_sc', parseInt(document.getElementById('sideCountInput').value)||5);
-  alert('✅ 메뉴가 저장되었어요!');
-  renderMenuEditor();
+function addBanchanMenu() {
+  const v = document.getElementById('newBanchanInput').value.trim();
+  if (!v) return;
+  const noDup = document.getElementById('newBanchanNoDup').checked;
+  store.banchans.push({ name: v, noDup });
+  document.getElementById('newBanchanInput').value = '';
+  document.getElementById('newBanchanNoDup').checked = false;
+  renderEditLists();
+}
+function saveMenus() {
+  store.banchanCount = parseInt(document.getElementById('banchanCountInput').value) || 3;
+  save();
+  renderMenus();
+  showToast('메뉴가 저장되었어요 ✓');
 }
 
-// 발송 정보
-function renderInfoEditor(){
-  const info=getInfo();
-  document.getElementById('editBadge').value=info.badge;
-  document.getElementById('editDeadline').value=info.deadline;
-  document.getElementById('editMsg').value=info.msg;
-}
-function saveInfo(){
-  sv('bc_info',{
-    badge: document.getElementById('editBadge').value.trim()||DEF.badge,
-    deadline: document.getElementById('editDeadline').value.trim()||DEF.deadline,
-    msg: document.getElementById('editMsg').value.trim()||DEF.msg
-  });
-  alert('✅ 발송 정보가 저장되었어요!');
+// ── 발송 정보 ──
+function saveDelivery() {
+  store.badge = document.getElementById('badgeInput').value.trim() || '우리가족반찬';
+  store.deliveryDate = document.getElementById('deliveryDate').value;
+  store.deliveryNote = document.getElementById('deliveryNote').value.trim();
+  save();
+  renderHeader();
+  showToast('발송 정보가 저장되었어요 ✓');
 }
 
-renderOrder();
+// ── 관리자 비밀번호 ──
+const DEFAULT_PW = '1234';
+let pwBuffer = '';
+let adminUnlocked = false; // 한 번 인증하면 세션 내 유지
+
+function getStoredPw() {
+  return localStorage.getItem('banchan_admin_pw') || DEFAULT_PW;
+}
+
+function toggleAdmin() {
+  const panel = document.getElementById('adminPanel');
+  if (panel.style.display === 'block') {
+    panel.style.display = 'none';
+    adminUnlocked = false;
+    return;
+  }
+  if (adminUnlocked) {
+    openAdminPanel();
+  } else {
+    openPwModal();
+  }
+}
+
+function openPwModal() {
+  pwBuffer = '';
+  updateDots();
+  document.getElementById('pwErrorMsg').textContent = '';
+  document.getElementById('pwOverlay').classList.add('show');
+}
+
+function closePwModal() {
+  document.getElementById('pwOverlay').classList.remove('show');
+  pwBuffer = '';
+  updateDots();
+}
+
+function pwInput(num) {
+  if (pwBuffer.length >= 4) return;
+  pwBuffer += num;
+  updateDots();
+  if (pwBuffer.length === 4) {
+    setTimeout(checkPw, 120);
+  }
+}
+
+function pwDelete() {
+  pwBuffer = pwBuffer.slice(0, -1);
+  updateDots();
+  document.getElementById('pwErrorMsg').textContent = '';
+}
+
+function updateDots() {
+  for (let i = 0; i < 4; i++) {
+    const dot = document.getElementById(`dot${i}`);
+    dot.classList.toggle('filled', i < pwBuffer.length);
+    dot.classList.remove('error');
+  }
+}
+
+function checkPw() {
+  if (pwBuffer === getStoredPw()) {
+    closePwModal();
+    adminUnlocked = true;
+    openAdminPanel();
+  } else {
+    // 오류 애니메이션
+    for (let i = 0; i < 4; i++) {
+      document.getElementById(`dot${i}`).classList.add('error');
+    }
+    document.getElementById('pwErrorMsg').textContent = '비밀번호가 맞지 않아요';
+    setTimeout(() => {
+      pwBuffer = '';
+      updateDots();
+      document.getElementById('pwErrorMsg').textContent = '';
+    }, 700);
+  }
+}
+
+function openAdminPanel() {
+  const panel = document.getElementById('adminPanel');
+  panel.style.display = 'block';
+  renderEditLists();
+  renderDeliveryForm();
+  renderOrders();
+}
+
+function changePassword() {
+  const np = document.getElementById('newPwInput').value.trim();
+  const nc = document.getElementById('newPwConfirm').value.trim();
+  if (!/^\d{4}$/.test(np)) { showToast('4자리 숫자만 입력해 주세요'); return; }
+  if (np !== nc) { showToast('비밀번호가 일치하지 않아요'); return; }
+  localStorage.setItem('banchan_admin_pw', np);
+  document.getElementById('newPwInput').value = '';
+  document.getElementById('newPwConfirm').value = '';
+  showToast('비밀번호가 변경됐어요 ✓');
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.admin-content').forEach(el => el.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  event.target.classList.add('active');
+  if (tab === 'orders') renderOrders();
+  if (tab === 'menu') renderEditLists();
+  if (tab === 'delivery') renderDeliveryForm();
+}
+
+// ── 토스트 ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ── 초기화 ──
+load();
+renderHeader();
+renderMenus();
 </script>
 </body>
 </html>
