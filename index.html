@@ -616,6 +616,12 @@
 </head>
 <body>
 
+<!-- 로딩 오버레이 -->
+<div id="loadingOverlay" style="display:flex;position:fixed;inset:0;background:rgba(255,253,247,0.92);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
+  <div style="font-size:32px;">🥢</div>
+  <div style="font-size:14px;color:var(--text-muted);font-weight:600;">불러오는 중...</div>
+</div>
+
 <!-- 비밀번호 모달 -->
 <div class="pw-overlay" id="pwOverlay">
   <div class="pw-modal">
@@ -810,6 +816,32 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ── Firebase 설정 ──
+const FB_URL = 'https://monthly-banchan-default-rtdb.asia-southeast1.firebasedatabase.app';
+
+async function fbGet(path) {
+  const res = await fetch(`${FB_URL}/${path}.json`);
+  return res.ok ? res.json() : null;
+}
+async function fbSet(path, data) {
+  await fetch(`${FB_URL}/${path}.json`, {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  });
+}
+async function fbPush(path, data) {
+  const res = await fetch(`${FB_URL}/${path}.json`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  });
+  return res.json(); // {name: "-Nxxx..."}
+}
+async function fbDelete(path) {
+  await fetch(`${FB_URL}/${path}.json`, { method: 'DELETE' });
+}
+
 // ── 데이터 스토어 ──
 let store = {
   soups: ['된장찌개', '순두부찌개', '김치찌개', '미역국'],
@@ -822,24 +854,63 @@ let store = {
     {name:'닭갈비', noDup:true},
   ],
   banchanCount: 3,
-  orders: [],
+  orders: [],   // [{fbKey, name, phone, addr, round, soup, banchans, time}, ...]
   badge: '우리가족반찬',
   deliveryDate: '',
   deliveryNote: '발송일에 맛있는 반찬을 보내드려요 😊'
 };
 
-function load() {
-  const saved = localStorage.getItem('banchan_store');
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      store = { ...store, ...parsed };
-    } catch(e) {}
-  }
+// 비밀번호는 Firebase에 저장 (모든 기기 동기화)
+async function getStoredPw() {
+  const pw = await fbGet('config/adminPw');
+  return pw || '1234';
+}
+async function setStoredPw(pw) {
+  await fbSet('config/adminPw', pw);
 }
 
-function save() {
-  localStorage.setItem('banchan_store', JSON.stringify(store));
+async function load() {
+  showLoadingOverlay(true);
+  try {
+    const [config, ordersRaw] = await Promise.all([
+      fbGet('config'),
+      fbGet('orders')
+    ]);
+    if (config) {
+      if (config.soups)        store.soups        = config.soups;
+      if (config.banchans)     store.banchans     = config.banchans;
+      if (config.banchanCount) store.banchanCount  = config.banchanCount;
+      if (config.badge)        store.badge        = config.badge;
+      if (config.deliveryDate !== undefined) store.deliveryDate = config.deliveryDate;
+      if (config.deliveryNote) store.deliveryNote = config.deliveryNote;
+    }
+    // orders: Firebase object → array (fbKey 포함)
+    store.orders = [];
+    if (ordersRaw) {
+      Object.entries(ordersRaw).forEach(([key, val]) => {
+        store.orders.push({ fbKey: key, ...val });
+      });
+      store.orders.sort((a, b) => new Date(a.time) - new Date(b.time));
+    }
+  } catch(e) {
+    showToast('데이터를 불러오지 못했어요. 인터넷을 확인해 주세요.');
+  }
+  showLoadingOverlay(false);
+}
+
+async function saveConfig() {
+  await fbSet('config', {
+    soups: store.soups,
+    banchans: store.banchans,
+    banchanCount: store.banchanCount,
+    badge: store.badge,
+    deliveryDate: store.deliveryDate,
+    deliveryNote: store.deliveryNote,
+  });
+}
+
+function showLoadingOverlay(show) {
+  document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
 }
 
 // ── 렌더링 ──
@@ -982,7 +1053,6 @@ function renderOrders() {
   }
 
   [...store.orders].reverse().forEach((order, ri) => {
-    const i = store.orders.length - 1 - ri;
     const div = document.createElement('div');
     div.className = 'order-card';
     const d = new Date(order.time);
@@ -996,7 +1066,7 @@ function renderOrders() {
       <div class="order-card-detail">📍 ${order.addr || '-'}</div>
       <div class="order-card-detail">🔢 ${order.round || '-'}</div>
       <div class="order-card-menus">🍲 ${order.soup} &nbsp;|&nbsp; 🥗 ${order.banchans.join(', ')}</div>
-      <button class="delete-order-btn" onclick="deleteOrder(${i})">삭제</button>
+      <button class="delete-order-btn" onclick="deleteOrder('${order.fbKey}')">삭제</button>
     `;
     list.appendChild(div);
   });
@@ -1063,6 +1133,9 @@ function renderItemTally() {
 
 // ── 주문 ──
 function submitOrder() {
+  _submitOrder();
+}
+async function _submitOrder() {
   const name = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
   const addr = document.getElementById('custAddr').value.trim();
@@ -1089,8 +1162,14 @@ function submitOrder() {
     time: new Date().toISOString()
   };
 
-  store.orders.push(order);
-  save();
+  try {
+    const result = await fbPush('orders', order);
+    order.fbKey = result.name;
+    store.orders.push(order);
+  } catch(e) {
+    showToast('주문 저장에 실패했어요. 인터넷을 확인해 주세요.');
+    return;
+  }
 
   // 완료 화면
   document.getElementById('orderForm').style.display = 'none';
@@ -1116,18 +1195,26 @@ function resetOrder() {
   renderMenus();
 }
 
-function deleteOrder(i) {
+async function deleteOrder(fbKey) {
   if (!confirm('이 주문을 삭제할까요?')) return;
-  store.orders.splice(i, 1);
-  save();
-  renderOrders();
+  try {
+    await fbDelete(`orders/${fbKey}`);
+    store.orders = store.orders.filter(o => o.fbKey !== fbKey);
+    renderOrders();
+  } catch(e) {
+    showToast('삭제에 실패했어요.');
+  }
 }
 
-function clearOrders() {
+async function clearOrders() {
   if (!confirm('전체 주문을 초기화할까요? 되돌릴 수 없어요.')) return;
-  store.orders = [];
-  save();
-  renderOrders();
+  try {
+    await fbDelete('orders');
+    store.orders = [];
+    renderOrders();
+  } catch(e) {
+    showToast('초기화에 실패했어요.');
+  }
 }
 
 // ── CSV 다운로드 ──
@@ -1186,31 +1273,26 @@ function addBanchanMenu() {
   document.getElementById('newBanchanNoDup').checked = false;
   renderEditLists();
 }
-function saveMenus() {
+async function saveMenus() {
   store.banchanCount = parseInt(document.getElementById('banchanCountInput').value) || 3;
-  save();
+  await saveConfig();
   renderMenus();
   showToast('메뉴가 저장되었어요 ✓');
 }
 
 // ── 발송 정보 ──
-function saveDelivery() {
+async function saveDelivery() {
   store.badge = document.getElementById('badgeInput').value.trim() || '우리가족반찬';
   store.deliveryDate = document.getElementById('deliveryDate').value;
   store.deliveryNote = document.getElementById('deliveryNote').value.trim();
-  save();
+  await saveConfig();
   renderHeader();
   showToast('발송 정보가 저장되었어요 ✓');
 }
 
 // ── 관리자 비밀번호 ──
-const DEFAULT_PW = '1234';
 let pwBuffer = '';
-let adminUnlocked = false; // 한 번 인증하면 세션 내 유지
-
-function getStoredPw() {
-  return localStorage.getItem('banchan_admin_pw') || DEFAULT_PW;
-}
+let adminUnlocked = false;
 
 function toggleAdmin() {
   const panel = document.getElementById('adminPanel');
@@ -1262,13 +1344,13 @@ function updateDots() {
   }
 }
 
-function checkPw() {
-  if (pwBuffer === getStoredPw()) {
+async function checkPw() {
+  const correctPw = await getStoredPw();
+  if (pwBuffer === correctPw) {
     closePwModal();
     adminUnlocked = true;
     openAdminPanel();
   } else {
-    // 오류 애니메이션
     for (let i = 0; i < 4; i++) {
       document.getElementById(`dot${i}`).classList.add('error');
     }
@@ -1289,12 +1371,12 @@ function openAdminPanel() {
   renderOrders();
 }
 
-function changePassword() {
+async function changePassword() {
   const np = document.getElementById('newPwInput').value.trim();
   const nc = document.getElementById('newPwConfirm').value.trim();
   if (!/^\d{4}$/.test(np)) { showToast('4자리 숫자만 입력해 주세요'); return; }
   if (np !== nc) { showToast('비밀번호가 일치하지 않아요'); return; }
-  localStorage.setItem('banchan_admin_pw', np);
+  await setStoredPw(np);
   document.getElementById('newPwInput').value = '';
   document.getElementById('newPwConfirm').value = '';
   showToast('비밀번호가 변경됐어요 ✓');
@@ -1319,9 +1401,12 @@ function showToast(msg) {
 }
 
 // ── 초기화 ──
-load();
-renderHeader();
-renderMenus();
+async function init() {
+  await load();
+  renderHeader();
+  renderMenus();
+}
+init();
 </script>
 </body>
 </html>
