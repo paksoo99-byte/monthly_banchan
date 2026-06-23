@@ -20,9 +20,7 @@
     --radius: 14px;
     --shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
     background: var(--bg);
@@ -31,594 +29,174 @@
     padding-bottom: 60px;
   }
 
-  /* ── 헤더 ── */
-  .header {
-    background: var(--primary);
-    color: white;
-    text-align: center;
-    padding: 24px 20px 20px;
-  }
-  .header-badge {
-    display: inline-block;
-    background: rgba(255,255,255,0.2);
-    border-radius: 20px;
-    padding: 4px 14px;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
-  }
+  /* 헤더 */
+  .header { background: var(--primary); color: white; text-align: center; padding: 24px 20px 20px; }
+  .header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 0.5px; margin-bottom: 10px; }
   .header h1 { font-size: 22px; font-weight: 700; }
   .header .sub { font-size: 13px; opacity: 0.85; margin-top: 4px; }
 
-  /* ── 섹션 ── */
-  .section {
-    background: var(--surface);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    margin: 14px 16px;
-    padding: 18px 16px;
-  }
-  .section-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--primary-dark);
-    letter-spacing: 0.5px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  /* 섹션 */
+  .section { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); margin: 14px 16px; padding: 18px 16px; }
+  .section-title { font-size: 13px; font-weight: 700; color: var(--primary-dark); letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
 
-  /* ── 주문자 정보 ── */
+  /* 주문자 정보 */
   .info-grid { display: flex; flex-direction: column; gap: 10px; }
   .info-field { display: flex; flex-direction: column; gap: 4px; }
   .info-field label { font-size: 12px; color: var(--text-muted); font-weight: 600; }
   .info-field input, .info-field textarea {
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 14px;
-    font-family: inherit;
-    color: var(--text);
-    background: var(--surface2);
-    outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
+    border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px;
+    font-size: 14px; font-family: inherit; color: var(--text); background: var(--surface2);
+    outline: none; transition: border-color 0.2s; width: 100%;
   }
-  .info-field input:focus, .info-field textarea:focus {
-    border-color: var(--primary);
-    background: white;
-  }
+  .info-field input:focus, .info-field textarea:focus { border-color: var(--primary); background: white; }
   .info-field textarea { resize: none; height: 70px; }
 
-  /* ── 메뉴 선택 ── */
-  .menu-category { margin-bottom: 4px; }
-  .menu-category-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
+  /* 메뉴 카테고리 */
+  .cat-section { margin-bottom: 0; }
+  .cat-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px;
   }
-  .menu-limit-badge {
-    display: inline-block;
-    font-size: 10px;
-    background: var(--accent-light);
-    color: var(--accent);
-    border-radius: 10px;
-    padding: 2px 8px;
-    margin-left: 6px;
-    font-weight: 600;
-  }
-  .menu-items { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .cat-emoji { font-size: 18px; }
+  .cat-name { font-size: 14px; font-weight: 700; color: var(--primary-dark); flex: 1; }
+  .cat-hint { font-size: 11px; color: var(--text-muted); background: var(--surface2); border-radius: 10px; padding: 2px 8px; }
+
+  .menu-items { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
   .menu-item {
-    display: flex;
-    align-items: center;
-    padding: 11px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.18s;
-    background: var(--surface2);
-    user-select: none;
-    position: relative;
+    display: flex; align-items: center; padding: 11px 14px;
+    border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer;
+    transition: all 0.18s; background: var(--surface2); user-select: none;
   }
   .menu-item:active { transform: scale(0.98); }
-  .menu-item.selected {
-    border-color: var(--primary);
-    background: var(--primary-light);
-  }
+  .menu-item.selected { border-color: var(--primary); background: var(--primary-light); }
   .menu-item input { display: none; }
-  .menu-item-check {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    margin-right: 12px;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.18s;
-    background: white;
+  .menu-check {
+    width: 20px; height: 20px; border: 2px solid var(--border); margin-right: 12px;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    transition: all 0.18s; background: white;
   }
-  .menu-item.selected .menu-item-check {
-    background: var(--primary);
-    border-color: var(--primary);
-  }
-  .menu-item.selected .menu-item-check::after {
-    content: '✓';
-    color: white;
-    font-size: 11px;
-    font-weight: 700;
-  }
+  .menu-check.radio { border-radius: 50%; }
+  .menu-check.checkbox { border-radius: 4px; }
+  .menu-item.selected .menu-check { background: var(--primary); border-color: var(--primary); }
+  .menu-item.selected .menu-check::after { content: '✓'; color: white; font-size: 11px; font-weight: 700; }
   .menu-item-name { font-size: 14px; font-weight: 500; flex: 1; }
-  .no-dup-tag {
-    font-size: 10px;
-    background: #FFF3E0;
-    color: #E65100;
-    border-radius: 6px;
-    padding: 2px 6px;
-    font-weight: 600;
-  }
 
-  /* ── 제출 버튼 ── */
+  /* 제출 버튼 */
   .submit-btn {
-    width: calc(100% - 32px);
-    margin: 0 16px 0;
-    padding: 16px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    letter-spacing: 0.3px;
+    width: calc(100% - 32px); margin: 0 16px; padding: 16px;
+    background: var(--primary); color: white; border: none; border-radius: var(--radius);
+    font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s;
   }
   .submit-btn:active { background: var(--primary-dark); transform: scale(0.99); }
 
-  /* ── 완료 화면 ── */
-  .done-screen {
-    display: none;
-    text-align: center;
-    padding: 40px 24px;
-  }
+  /* 완료 화면 */
+  .done-screen { display: none; text-align: center; padding: 40px 24px; }
   .done-icon { font-size: 52px; margin-bottom: 16px; }
   .done-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
   .done-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
-  .done-summary {
-    background: var(--surface2);
-    border-radius: 10px;
-    padding: 14px;
-    text-align: left;
-    font-size: 13px;
-    line-height: 1.8;
-    margin-bottom: 20px;
-    color: var(--text);
-  }
-  .retry-btn {
-    background: var(--surface2);
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    color: var(--text);
-  }
+  .done-summary { background: var(--surface2); border-radius: 10px; padding: 14px; text-align: left; font-size: 13px; line-height: 1.9; margin-bottom: 20px; }
+  .retry-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 24px; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--text); }
 
-  /* ── 관리자 ── */
-  .admin-toggle {
-    text-align: center;
-    margin: 20px 16px 0;
-  }
-  .admin-toggle button {
-    background: none;
-    border: 1.5px solid var(--border);
-    border-radius: 20px;
-    padding: 7px 18px;
-    font-size: 12px;
-    color: var(--text-muted);
-    cursor: pointer;
-  }
-
-  .admin-panel {
-    display: none;
-    background: var(--surface);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    margin: 14px 16px;
-    padding: 18px 16px;
-  }
-  .admin-tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-  .admin-tab {
-    padding: 7px 14px;
-    border-radius: 20px;
-    border: 1.5px solid var(--border);
-    background: var(--surface2);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    color: var(--text-muted);
-    transition: all 0.15s;
-  }
-  .admin-tab.active {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: white;
-  }
+  /* 관리자 */
+  .admin-toggle { text-align: center; margin: 20px 16px 0; }
+  .admin-toggle button { background: none; border: 1.5px solid var(--border); border-radius: 20px; padding: 7px 18px; font-size: 12px; color: var(--text-muted); cursor: pointer; }
+  .admin-panel { display: none; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); margin: 14px 16px; padding: 18px 16px; }
+  .admin-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+  .admin-tab { padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--surface2); font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
+  .admin-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
   .admin-content { display: none; }
   .admin-content.active { display: block; }
 
-  /* ── 주문 현황 ── */
-  .order-count-badge {
-    display: inline-block;
-    background: var(--primary-light);
-    color: var(--primary-dark);
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 10px;
-    padding: 2px 8px;
-    margin-left: 6px;
-  }
-
-  /* 반찬별 집계 */
-  .item-summary {
-    margin-bottom: 16px;
-  }
-  .item-summary-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-    letter-spacing: 0.5px;
-  }
-  .item-tally {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .tally-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--surface2);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 13px;
-  }
+  /* 주문 현황 */
+  .order-count-badge { display: inline-block; background: var(--primary-light); color: var(--primary-dark); font-size: 11px; font-weight: 700; border-radius: 10px; padding: 2px 8px; margin-left: 6px; }
+  .item-tally { display: flex; flex-direction: column; gap: 5px; }
+  .tally-section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); margin: 10px 0 4px; letter-spacing: 0.5px; }
+  .tally-row { display: flex; align-items: center; background: var(--surface2); border-radius: 8px; padding: 8px 12px; font-size: 13px; gap: 8px; }
   .tally-name { flex: 1; font-weight: 500; }
-  .tally-bar-wrap {
-    flex: 2;
-    height: 6px;
-    background: var(--border);
-    border-radius: 4px;
-    margin: 0 10px;
-    overflow: hidden;
-  }
-  .tally-bar {
-    height: 100%;
-    background: var(--primary);
-    border-radius: 4px;
-    transition: width 0.4s ease;
-  }
-  .tally-num {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--primary-dark);
-    min-width: 28px;
-    text-align: right;
-  }
+  .tally-bar-wrap { flex: 2; height: 6px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .tally-bar { height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.4s ease; }
+  .tally-num { font-size: 13px; font-weight: 700; color: var(--primary-dark); min-width: 28px; text-align: right; }
 
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 12px 0;
-  }
-
-  /* 주문 카드 */
-  .order-card {
-    background: var(--surface2);
-    border-radius: 10px;
-    padding: 12px 14px;
-    margin-bottom: 8px;
-    font-size: 13px;
-    line-height: 1.7;
-  }
-  .order-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-  }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+  .order-card { background: var(--surface2); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; font-size: 13px; line-height: 1.7; }
+  .order-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
   .order-card-name { font-weight: 700; font-size: 14px; }
   .order-card-time { font-size: 11px; color: var(--text-muted); }
   .order-card-detail { color: var(--text-muted); }
-  .order-card-menus { font-weight: 500; margin-top: 2px; }
-  .delete-order-btn {
-    background: none;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 3px 8px;
-    font-size: 11px;
-    cursor: pointer;
-    color: #999;
-    margin-top: 6px;
-  }
+  .order-card-menus { font-weight: 500; margin-top: 4px; }
+  .order-cat-line { margin-top: 2px; }
+  .delete-order-btn { background: none; border: 1px solid #ddd; border-radius: 6px; padding: 3px 8px; font-size: 11px; cursor: pointer; color: #999; margin-top: 6px; }
+  .empty-msg { text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px 0; }
 
   /* 메뉴 편집 */
-  .edit-list { display: flex; flex-direction: column; gap: 6px; }
-  .edit-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--surface2);
-    border-radius: 8px;
-    padding: 8px 10px;
-    font-size: 13px;
-  }
+  .cat-edit-block { background: var(--surface2); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+  .cat-edit-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .cat-edit-title { font-size: 13px; font-weight: 700; flex: 1; }
+  .cat-edit-type { font-size: 11px; background: var(--primary-light); color: var(--primary-dark); border-radius: 10px; padding: 2px 8px; }
+  .remove-cat-btn { background: none; border: none; cursor: pointer; font-size: 16px; color: #bbb; padding: 0 2px; }
+  .edit-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
+  .edit-item { display: flex; align-items: center; gap: 8px; background: white; border-radius: 7px; padding: 7px 10px; font-size: 13px; }
   .edit-item span { flex: 1; }
-  .edit-item button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    color: #bbb;
-    padding: 0 4px;
-  }
-  .add-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .add-row input {
-    flex: 1;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 13px;
-    font-family: inherit;
-    outline: none;
-  }
+  .edit-item button { background: none; border: none; cursor: pointer; font-size: 14px; color: #bbb; }
+  .add-row { display: flex; gap: 6px; }
+  .add-row input { flex: 1; border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 13px; font-family: inherit; outline: none; background: white; }
   .add-row input:focus { border-color: var(--primary); }
-  .add-row button {
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .no-dup-check {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 8px;
-    cursor: pointer;
-  }
+  .add-row button { background: var(--primary); color: white; border: none; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 
-  /* 발송 정보 */
-  .field-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-  .field-group label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 2px; display: block; }
-  .field-group input, .field-group textarea {
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 12px;
-    font-size: 13px;
-    font-family: inherit;
-    outline: none;
-    background: var(--surface2);
-    width: 100%;
-  }
-  .field-group input:focus, .field-group textarea:focus {
-    border-color: var(--primary);
-    background: white;
-  }
+  /* 새 카테고리 추가 */
+  .new-cat-form { background: var(--accent-light); border-radius: 10px; padding: 12px; margin-top: 8px; }
+  .new-cat-form .form-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .new-cat-form input { flex: 1; min-width: 100px; border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 13px; font-family: inherit; outline: none; background: white; }
+  .new-cat-form input:focus { border-color: var(--accent); }
+  .type-toggle { display: flex; gap: 6px; }
+  .type-btn { padding: 6px 12px; border-radius: 8px; border: 1.5px solid var(--border); background: white; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
+  .type-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
 
-  .save-btn {
-    width: 100%;
-    padding: 12px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 4px;
-  }
+  /* 발송정보 */
+  .field-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+  .field-group label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  .field-group input, .field-group textarea { border: 1.5px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 13px; font-family: inherit; outline: none; background: var(--surface2); width: 100%; }
+  .field-group input:focus, .field-group textarea:focus { border-color: var(--primary); background: white; }
+  .save-btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 4px; }
+  .danger-btn { width: auto; padding: 5px 12px; background: none; color: #C0392B; border: 1.5px solid #E8B8B2; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .download-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; margin-bottom: 8px; }
 
-  .danger-btn {
-    width: 100%;
-    padding: 11px;
-    background: none;
-    color: #C0392B;
-    border: 1.5px solid #E8B8B2;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 8px;
-  }
+  /* 비밀번호 변경 */
+  .pw-change-box { background: var(--surface2); border-radius: 10px; padding: 14px; margin-top: 8px; }
+  .pw-change-box label { font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px; }
+  .pw-change-box input { width: 100%; border: 1.5px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 14px; letter-spacing: 4px; text-align: center; outline: none; background: white; margin-bottom: 8px; font-family: inherit; }
+  .pw-change-box input:focus { border-color: var(--primary); }
 
-  .download-btn {
-    width: 100%;
-    padding: 12px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-bottom: 8px;
-  }
-
-  .empty-msg {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 13px;
-    padding: 20px 0;
-  }
-
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    background: #2C2C2C;
-    color: white;
-    padding: 10px 22px;
-    border-radius: 20px;
-    font-size: 13px;
-    opacity: 0;
-    transition: opacity 0.3s, transform 0.3s;
-    z-index: 999;
-    white-space: nowrap;
-  }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .count-select {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 6px;
-  }
-  .count-select input[type=number] {
-    width: 60px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 7px 10px;
-    font-size: 14px;
-    text-align: center;
-    outline: none;
-    background: var(--surface2);
-  }
-
-  /* ── 비밀번호 모달 ── */
-  .pw-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-  }
+  /* 비밀번호 모달 */
+  .pw-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: center; justify-content: center; }
   .pw-overlay.show { display: flex; }
-  .pw-modal {
-    background: white;
-    border-radius: 18px;
-    padding: 28px 24px 24px;
-    width: 300px;
-    max-width: 90vw;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    text-align: center;
-    animation: popIn 0.2s ease;
-  }
-  @keyframes popIn {
-    from { transform: scale(0.92); opacity: 0; }
-    to   { transform: scale(1);    opacity: 1; }
-  }
+  .pw-modal { background: white; border-radius: 18px; padding: 28px 24px 24px; width: 300px; max-width: 90vw; box-shadow: 0 8px 32px rgba(0,0,0,0.18); text-align: center; animation: popIn 0.2s ease; }
+  @keyframes popIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   .pw-icon { font-size: 36px; margin-bottom: 10px; }
   .pw-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
   .pw-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; }
-  .pw-dots {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  .pw-dot {
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    background: white;
-    transition: all 0.15s;
-  }
+  .pw-dots { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
+  .pw-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--border); background: white; transition: all 0.15s; }
   .pw-dot.filled { background: var(--primary); border-color: var(--primary); }
-  .pw-dot.error  { background: #E74C3C; border-color: #E74C3C; }
-  .pw-keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-  .pw-key {
-    padding: 14px 0;
-    border-radius: 10px;
-    border: 1.5px solid var(--border);
-    background: var(--surface2);
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.12s, transform 0.08s;
-    user-select: none;
-  }
+  .pw-dot.error { background: #E74C3C; border-color: #E74C3C; }
+  .pw-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .pw-key { padding: 14px 0; border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface2); font-size: 18px; font-weight: 600; cursor: pointer; transition: background 0.12s, transform 0.08s; user-select: none; }
   .pw-key:active { background: var(--primary-light); transform: scale(0.95); }
   .pw-key.del { font-size: 14px; color: var(--text-muted); }
   .pw-key.empty { border: none; background: none; cursor: default; }
-  .pw-cancel {
-    margin-top: 14px;
-    background: none;
-    border: none;
-    font-size: 13px;
-    color: var(--text-muted);
-    cursor: pointer;
-    text-decoration: underline;
-  }
-  .pw-error-msg {
-    font-size: 12px;
-    color: #E74C3C;
-    min-height: 16px;
-    margin-bottom: 6px;
-  }
+  .pw-cancel { margin-top: 14px; background: none; border: none; font-size: 13px; color: var(--text-muted); cursor: pointer; text-decoration: underline; }
+  .pw-error-msg { font-size: 12px; color: #E74C3C; min-height: 16px; margin-bottom: 6px; }
 
-  /* 비밀번호 변경 섹션 */
-  .pw-change-box {
-    background: var(--surface2);
-    border-radius: 10px;
-    padding: 14px;
-    margin-top: 8px;
-  }
-  .pw-change-box label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-muted);
-    display: block;
-    margin-bottom: 4px;
-  }
-  .pw-change-box input {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 12px;
-    font-size: 14px;
-    letter-spacing: 4px;
-    text-align: center;
-    outline: none;
-    background: white;
-    margin-bottom: 8px;
-    font-family: inherit;
-  }
-  .pw-change-box input:focus { border-color: var(--primary); }
+  /* 토스트 */
+  .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(10px); background: #2C2C2C; color: white; padding: 10px 22px; border-radius: 20px; font-size: 13px; opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 999; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- 로딩 오버레이 -->
-<div id="loadingOverlay" style="display:flex;position:fixed;inset:0;background:rgba(255,253,247,0.92);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
-  <div style="font-size:32px;">🥢</div>
+<!-- 로딩 -->
+<div id="loadingOverlay" style="display:flex;position:fixed;inset:0;background:rgba(255,253,247,0.95);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
+  <div style="font-size:36px;">🥢</div>
   <div style="font-size:14px;color:var(--text-muted);font-weight:600;">불러오는 중...</div>
 </div>
 
@@ -628,7 +206,7 @@
     <div class="pw-icon">🔐</div>
     <div class="pw-title">관리자 비밀번호</div>
     <div class="pw-sub">4자리 숫자를 입력해 주세요</div>
-    <div class="pw-dots" id="pwDots">
+    <div class="pw-dots">
       <div class="pw-dot" id="dot0"></div>
       <div class="pw-dot" id="dot1"></div>
       <div class="pw-dot" id="dot2"></div>
@@ -662,7 +240,6 @@
 
 <!-- 주문 폼 -->
 <div id="orderForm">
-  <!-- 주문자 정보 -->
   <div class="section">
     <div class="section-title">👤 주문자 정보</div>
     <div class="info-grid">
@@ -685,23 +262,10 @@
     </div>
   </div>
 
-  <!-- 국·찌개 -->
-  <div class="section" id="soupSection">
-    <div class="section-title">🍲 국·찌개</div>
-    <div class="menu-category-title">1개 고르세요</div>
-    <div class="menu-items" id="soupItems"></div>
-  </div>
-
-  <!-- 반찬 -->
-  <div class="section" id="banchanSection">
-    <div class="section-title">🥗 반찬</div>
-    <div class="menu-category-title" id="banchanLimit">선택해 주세요</div>
-    <div id="banchanNodupWarning" style="font-size:12px;color:var(--accent);margin-bottom:8px;display:none;">⚠️ 중복 선택 불가 품목이 포함되어 있어요.</div>
-    <div class="menu-items" id="banchanItems"></div>
-  </div>
+  <!-- 카테고리별 메뉴 (동적 렌더링) -->
+  <div id="menuSections"></div>
 
   <button class="submit-btn" onclick="submitOrder()">주문 완료하기 →</button>
-
   <div class="admin-toggle">
     <button onclick="toggleAdmin()">🔑 관리자 모드</button>
   </div>
@@ -725,70 +289,48 @@
     <div style="font-size:15px;font-weight:700;">⚙️ 관리자 모드</div>
     <button onclick="toggleAdmin()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;">✕</button>
   </div>
-
   <div class="admin-tabs">
-    <div class="admin-tab active" onclick="switchTab('orders')">📋 주문현황</div>
-    <div class="admin-tab" onclick="switchTab('menu')">✏️ 메뉴편집</div>
-    <div class="admin-tab" onclick="switchTab('delivery')">📅 발송정보</div>
+    <div class="admin-tab active" onclick="switchTab('orders',this)">📋 주문현황</div>
+    <div class="admin-tab" onclick="switchTab('menu',this)">✏️ 메뉴편집</div>
+    <div class="admin-tab" onclick="switchTab('delivery',this)">📅 발송정보</div>
   </div>
 
-  <!-- 주문현황 탭 -->
+  <!-- 주문현황 -->
   <div class="admin-content active" id="tab-orders">
     <button class="download-btn" onclick="downloadCSV()">📥 엑셀(CSV)로 다운로드</button>
-
-    <!-- 반찬별 집계 -->
-    <div class="item-summary" id="itemSummaryArea">
-      <div class="item-summary-title">🔢 반찬별 총 주문 수</div>
-      <div class="item-tally" id="itemTallyList"></div>
-    </div>
-
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:8px;">🔢 카테고리별 총 주문 수</div>
+    <div class="item-tally" id="itemTallyList"></div>
     <hr class="divider">
-
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
       <div class="section-title" style="margin:0;">주문 목록 <span class="order-count-badge" id="orderCountBadge">0건</span></div>
-      <button class="danger-btn" style="width:auto;padding:5px 12px;font-size:12px;margin:0;" onclick="clearOrders()">🗑 전체 초기화</button>
+      <button class="danger-btn" onclick="clearOrders()">🗑 전체 초기화</button>
     </div>
     <div id="orderList"></div>
   </div>
 
-  <!-- 메뉴편집 탭 -->
+  <!-- 메뉴편집 -->
   <div class="admin-content" id="tab-menu">
-    <div class="section-title" style="margin-bottom:10px;">🍲 국·찌개 목록</div>
-    <div class="edit-list" id="soupEditList"></div>
-    <div class="add-row">
-      <input type="text" id="newSoupInput" placeholder="메뉴 이름">
-      <button onclick="addSoupMenu()">+ 추가</button>
+    <div id="catEditList"></div>
+    <div class="new-cat-form">
+      <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px;">+ 새 카테고리 추가</div>
+      <div class="form-row">
+        <input type="text" id="newCatEmoji" placeholder="🍽️" style="max-width:60px;text-align:center;">
+        <input type="text" id="newCatName" placeholder="카테고리 이름">
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">선택 방식</div>
+      <div class="type-toggle" style="margin-bottom:10px;">
+        <button class="type-btn active" id="typeRadioBtn" onclick="setNewCatType('radio',this)">하나만 선택</button>
+        <button class="type-btn" id="typeCheckBtn" onclick="setNewCatType('check',this)">여러 개 선택</button>
+      </div>
+      <button onclick="addCategory()" style="width:100%;padding:10px;background:var(--accent);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">추가하기</button>
     </div>
-
-    <hr class="divider">
-
-    <div class="section-title" style="margin:12px 0 10px;">🥗 반찬 목록</div>
-    <div class="edit-list" id="banchanEditList"></div>
-    <div class="add-row" style="flex-wrap:wrap;gap:6px;">
-      <input type="text" id="newBanchanInput" placeholder="메뉴 이름" style="flex:1;min-width:120px;">
-      <label class="no-dup-check">
-        <input type="checkbox" id="newBanchanNoDup">
-        중복선택불가
-      </label>
-      <button onclick="addBanchanMenu()" style="white-space:nowrap;">+ 추가</button>
-    </div>
-
-    <hr class="divider">
-
-    <div class="section-title" style="margin:12px 0 8px;">🔢 반찬 선택 개수</div>
-    <div class="count-select">
-      <span style="font-size:13px;">고객이 선택해야 할 반찬 수</span>
-      <input type="number" id="banchanCountInput" min="1" max="10" value="3">
-      <span style="font-size:13px;">개</span>
-    </div>
-
-    <button class="save-btn" onclick="saveMenus()" style="margin-top:14px;">✅ 메뉴 저장하기</button>
+    <button class="save-btn" onclick="saveMenus()" style="margin-top:10px;">✅ 메뉴 저장하기</button>
   </div>
 
-  <!-- 발송정보 탭 -->
+  <!-- 발송정보 -->
   <div class="admin-content" id="tab-delivery">
     <div class="field-group">
-      <label>상단 배지 (예: 우리가족반찬 2025년 5월 · 2회차)</label>
+      <label>상단 배지</label>
       <input type="text" id="badgeInput" placeholder="우리가족반찬 2025년 5월 · 2회차">
     </div>
     <div class="field-group">
@@ -800,15 +342,14 @@
       <textarea id="deliveryNote" placeholder="예) 이번 주 발송은 화요일 오전입니다." style="height:70px;resize:none;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;outline:none;background:var(--surface2);width:100%;"></textarea>
     </div>
     <button class="save-btn" onclick="saveDelivery()">✅ 발송 정보 저장</button>
-
     <hr class="divider" style="margin-top:16px;">
     <div class="section-title" style="margin:12px 0 8px;">🔐 관리자 비밀번호 변경</div>
     <div class="pw-change-box">
       <label>새 비밀번호 (4자리 숫자)</label>
-      <input type="password" id="newPwInput" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••">
+      <input type="password" id="newPwInput" maxlength="4" inputmode="numeric" placeholder="••••">
       <label>새 비밀번호 확인</label>
-      <input type="password" id="newPwConfirm" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••">
-      <button class="save-btn" onclick="changePassword()" style="margin-top:4px;">🔑 비밀번호 변경</button>
+      <input type="password" id="newPwConfirm" maxlength="4" inputmode="numeric" placeholder="••••">
+      <button class="save-btn" onclick="changePassword()">🔑 비밀번호 변경</button>
     </div>
   </div>
 </div>
@@ -816,104 +357,76 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Firebase 설정 ──
+// ── Firebase ──
 const FB_URL = 'https://monthly-banchan-default-rtdb.asia-southeast1.firebasedatabase.app';
-
 async function fbGet(path) {
   const res = await fetch(`${FB_URL}/${path}.json`);
   return res.ok ? res.json() : null;
 }
 async function fbSet(path, data) {
-  await fetch(`${FB_URL}/${path}.json`, {
-    method: 'PUT',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(data)
-  });
+  await fetch(`${FB_URL}/${path}.json`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
 }
 async function fbPush(path, data) {
-  const res = await fetch(`${FB_URL}/${path}.json`, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(data)
-  });
-  return res.json(); // {name: "-Nxxx..."}
+  const res = await fetch(`${FB_URL}/${path}.json`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+  return res.json();
 }
 async function fbDelete(path) {
-  await fetch(`${FB_URL}/${path}.json`, { method: 'DELETE' });
+  await fetch(`${FB_URL}/${path}.json`, { method:'DELETE' });
 }
 
-// ── 데이터 스토어 ──
+// ── 기본 카테고리 ──
+const DEFAULT_CATEGORIES = [
+  { id:'soup',    emoji:'🍲', name:'국·찌개',  type:'radio', items:['된장찌개','순두부찌개','김치찌개','미역국'] },
+  { id:'namul',   emoji:'🥬', name:'나물·무침', type:'check', items:['시금치나물','콩나물무침','취나물','도라지무침'] },
+  { id:'main',    emoji:'🍖', name:'메인반찬',  type:'check', items:['제육볶음','닭갈비','오징어볶음','소고기참깨채'] },
+  { id:'side',    emoji:'🥚', name:'기타반찬',  type:'check', items:['감자조림','계란부조림','두부조림','어묵볶음'] },
+];
+
 let store = {
-  soups: ['된장찌개', '순두부찌개', '김치찌개', '미역국'],
-  banchans: [
-    {name:'시금치나물', noDup:false},
-    {name:'콩나물무침', noDup:false},
-    {name:'감자조림', noDup:false},
-    {name:'제육볶음', noDup:true},
-    {name:'오징어볶음', noDup:true},
-    {name:'닭갈비', noDup:true},
-  ],
-  banchanCount: 3,
-  orders: [],   // [{fbKey, name, phone, addr, round, soup, banchans, time}, ...]
+  categories: DEFAULT_CATEGORIES,
+  orders: [],
   badge: '우리가족반찬',
   deliveryDate: '',
   deliveryNote: '발송일에 맛있는 반찬을 보내드려요 😊'
 };
 
-// 비밀번호는 Firebase에 저장 (모든 기기 동기화)
 async function getStoredPw() {
   const pw = await fbGet('config/adminPw');
   return pw || '1234';
 }
-async function setStoredPw(pw) {
-  await fbSet('config/adminPw', pw);
-}
+async function setStoredPw(pw) { await fbSet('config/adminPw', pw); }
 
 async function load() {
-  showLoadingOverlay(true);
+  showLoading(true);
   try {
-    const [config, ordersRaw] = await Promise.all([
-      fbGet('config'),
-      fbGet('orders')
-    ]);
+    const [config, ordersRaw] = await Promise.all([fbGet('config'), fbGet('orders')]);
     if (config) {
-      if (config.soups)        store.soups        = config.soups;
-      if (config.banchans)     store.banchans     = config.banchans;
-      if (config.banchanCount) store.banchanCount  = config.banchanCount;
+      if (config.categories)   store.categories   = config.categories;
       if (config.badge)        store.badge        = config.badge;
       if (config.deliveryDate !== undefined) store.deliveryDate = config.deliveryDate;
       if (config.deliveryNote) store.deliveryNote = config.deliveryNote;
     }
-    // orders: Firebase object → array (fbKey 포함)
     store.orders = [];
     if (ordersRaw) {
-      Object.entries(ordersRaw).forEach(([key, val]) => {
-        store.orders.push({ fbKey: key, ...val });
-      });
-      store.orders.sort((a, b) => new Date(a.time) - new Date(b.time));
+      Object.entries(ordersRaw).forEach(([key, val]) => store.orders.push({ fbKey:key, ...val }));
+      store.orders.sort((a,b) => new Date(a.time) - new Date(b.time));
     }
-  } catch(e) {
-    showToast('데이터를 불러오지 못했어요. 인터넷을 확인해 주세요.');
-  }
-  showLoadingOverlay(false);
+  } catch(e) { showToast('데이터를 불러오지 못했어요. 인터넷을 확인해 주세요.'); }
+  showLoading(false);
 }
 
 async function saveConfig() {
   await fbSet('config', {
-    soups: store.soups,
-    banchans: store.banchans,
-    banchanCount: store.banchanCount,
+    categories: store.categories,
     badge: store.badge,
     deliveryDate: store.deliveryDate,
     deliveryNote: store.deliveryNote,
   });
 }
 
-function showLoadingOverlay(show) {
-  document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
-}
+function showLoading(v) { document.getElementById('loadingOverlay').style.display = v ? 'flex' : 'none'; }
 
-// ── 렌더링 ──
+// ── 헤더 렌더 ──
 function renderHeader() {
   document.getElementById('headerBadge').textContent = store.badge || '우리가족반찬';
   if (store.deliveryDate) {
@@ -925,138 +438,127 @@ function renderHeader() {
   }
 }
 
+// ── 메뉴 렌더 ──
 function renderMenus() {
-  // 국
-  const soupEl = document.getElementById('soupItems');
-  soupEl.innerHTML = '';
-  store.soups.forEach((s, i) => {
-    const label = document.createElement('label');
-    label.className = 'menu-item';
-    label.innerHTML = `
-      <input type="radio" name="soup" value="${s}">
-      <div class="menu-item-check"></div>
-      <span class="menu-item-name">${s}</span>
+  const wrap = document.getElementById('menuSections');
+  wrap.innerHTML = '';
+  store.categories.forEach(cat => {
+    const sec = document.createElement('div');
+    sec.className = 'section cat-section';
+    const hint = cat.type === 'radio' ? '1개 선택' : '여러 개 선택 가능';
+    sec.innerHTML = `
+      <div class="cat-header">
+        <span class="cat-emoji">${cat.emoji}</span>
+        <span class="cat-name">${cat.name}</span>
+        <span class="cat-hint">${hint}</span>
+      </div>
+      <div class="menu-items" id="items-${cat.id}"></div>
     `;
-    label.addEventListener('click', () => {
-      document.querySelectorAll('#soupItems .menu-item').forEach(el => el.classList.remove('selected'));
-      label.classList.add('selected');
-    });
-    soupEl.appendChild(label);
-  });
+    wrap.appendChild(sec);
 
-  // 반찬
-  const banchanEl = document.getElementById('banchanItems');
-  banchanEl.innerHTML = '';
-  const limit = store.banchanCount || 3;
-  document.getElementById('banchanLimit').textContent = `${limit}개 고르세요`;
-
-  let hasNoDup = store.banchans.some(b => b.noDup);
-  document.getElementById('banchanNodupWarning').style.display = hasNoDup ? 'block' : 'none';
-
-  // 중복불가 항목들 추출
-  const noDupItems = store.banchans.filter(b => b.noDup).map(b => b.name);
-  
-  store.banchans.forEach((b, i) => {
-    const label = document.createElement('label');
-    label.className = 'menu-item';
-    label.dataset.nodup = b.noDup ? '1' : '0';
-    label.dataset.name = b.name;
-    label.innerHTML = `
-      <input type="checkbox" name="banchan" value="${b.name}">
-      <div class="menu-item-check" style="border-radius:4px;"></div>
-      <span class="menu-item-name">${b.name}</span>
-      ${b.noDup ? '<span class="no-dup-tag">중복선택불가</span>' : ''}
-    `;
-    label.addEventListener('click', (e) => {
-      e.preventDefault();
-      const checkboxes = document.querySelectorAll('#banchanItems input[type=checkbox]');
-      const thisCheckbox = label.querySelector('input');
-      const checked = document.querySelectorAll('#banchanItems input[type=checkbox]:checked');
-      const selectedNames = Array.from(checked).map(c => c.value);
-
-      if (thisCheckbox.checked) {
-        // 이미 선택된 → 해제
-        thisCheckbox.checked = false;
-        label.classList.remove('selected');
-      } else {
-        // 선택 시도
-        if (checked.length >= limit) {
-          showToast(`반찬은 최대 ${limit}개까지 선택할 수 있어요`);
-          return;
-        }
-        // 중복불가 체크
-        if (b.noDup) {
-          // 이미 중복불가 항목이 선택되어 있으면
-          const selectedNoDup = Array.from(checked).filter(c => {
-            const lbl = document.querySelector(`#banchanItems label[data-name="${c.value}"]`);
-            return lbl && lbl.dataset.nodup === '1';
-          });
-          if (selectedNoDup.length > 0) {
-            showToast('중복선택불가 항목은 하나만 고를 수 있어요');
-            return;
-          }
+    const itemsEl = sec.querySelector(`#items-${cat.id}`);
+    cat.items.forEach(itemName => {
+      const label = document.createElement('label');
+      label.className = 'menu-item';
+      label.dataset.catId = cat.id;
+      label.dataset.itemName = itemName;
+      const checkClass = cat.type === 'radio' ? 'radio' : 'checkbox';
+      label.innerHTML = `
+        <input type="${cat.type === 'radio' ? 'radio' : 'checkbox'}" name="cat_${cat.id}" value="${itemName}">
+        <div class="menu-check ${checkClass}"></div>
+        <span class="menu-item-name">${itemName}</span>
+      `;
+      label.addEventListener('click', e => {
+        e.preventDefault();
+        const inp = label.querySelector('input');
+        if (cat.type === 'radio') {
+          document.querySelectorAll(`[data-cat-id="${cat.id}"]`).forEach(el => el.classList.remove('selected'));
+          inp.checked = true;
+          label.classList.add('selected');
         } else {
-          // 일반 항목 선택 시, 중복불가 이미 있는지 확인 불필요 (일반+중복불가 혼합 가능)
+          inp.checked = !inp.checked;
+          label.classList.toggle('selected', inp.checked);
         }
-        thisCheckbox.checked = true;
-        label.classList.add('selected');
-      }
+      });
+      itemsEl.appendChild(label);
     });
-    banchanEl.appendChild(label);
   });
 }
 
-function renderEditLists() {
-  // 국 편집
-  const soupEdit = document.getElementById('soupEditList');
-  soupEdit.innerHTML = '';
-  store.soups.forEach((s, i) => {
-    const div = document.createElement('div');
-    div.className = 'edit-item';
-    div.innerHTML = `<span>${s}</span><button onclick="removeSoup(${i})">✕</button>`;
-    soupEdit.appendChild(div);
-  });
+// ── 주문 제출 ──
+function submitOrder() { _submitOrder(); }
+async function _submitOrder() {
+  const name  = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const addr  = document.getElementById('custAddr').value.trim();
+  const round = document.getElementById('custRound').value.trim();
+  if (!name)  { showToast('이름을 입력해 주세요'); return; }
+  if (!phone) { showToast('핸드폰 번호를 입력해 주세요'); return; }
+  if (!addr)  { showToast('배송 주소를 입력해 주세요'); return; }
+  if (!round) { showToast('신청 회차를 입력해 주세요'); return; }
 
-  // 반찬 편집
-  const banchanEdit = document.getElementById('banchanEditList');
-  banchanEdit.innerHTML = '';
-  store.banchans.forEach((b, i) => {
-    const div = document.createElement('div');
-    div.className = 'edit-item';
-    div.innerHTML = `
-      <span>${b.name}${b.noDup ? ' <span class="no-dup-tag">중복불가</span>' : ''}</span>
-      <button onclick="removeBanchan(${i})">✕</button>
-    `;
-    banchanEdit.appendChild(div);
-  });
+  // 카테고리별 선택값 수집
+  const selections = {};
+  for (const cat of store.categories) {
+    const checked = Array.from(document.querySelectorAll(`input[name="cat_${cat.id}"]:checked`)).map(e => e.value);
+    if (cat.type === 'radio' && checked.length === 0) {
+      showToast(`${cat.name}을(를) 선택해 주세요`); return;
+    }
+    selections[cat.id] = checked;
+  }
 
-  document.getElementById('banchanCountInput').value = store.banchanCount || 3;
+  const order = { name, phone, addr, round, selections, time: new Date().toISOString() };
+
+  try {
+    const result = await fbPush('orders', order);
+    order.fbKey = result.name;
+    store.orders.push(order);
+  } catch(e) {
+    showToast('주문 저장에 실패했어요. 인터넷을 확인해 주세요.'); return;
+  }
+
+  document.getElementById('orderForm').style.display = 'none';
+  document.getElementById('doneScreen').style.display = 'block';
+
+  // 완료 요약
+  let summaryHtml = `<b>이름:</b> ${name}<br><b>연락처:</b> ${phone}<br><b>주소:</b> ${addr}<br><b>신청 회차:</b> ${round}<br>`;
+  store.categories.forEach(cat => {
+    const sel = selections[cat.id];
+    if (sel && sel.length > 0) summaryHtml += `<b>${cat.emoji} ${cat.name}:</b> ${sel.join(', ')}<br>`;
+  });
+  document.getElementById('doneSummary').innerHTML = summaryHtml;
 }
 
-function renderDeliveryForm() {
-  document.getElementById('badgeInput').value = store.badge || '';
-  document.getElementById('deliveryDate').value = store.deliveryDate || '';
-  document.getElementById('deliveryNote').value = store.deliveryNote || '';
+function resetOrder() {
+  document.getElementById('orderForm').style.display = 'block';
+  document.getElementById('doneScreen').style.display = 'none';
+  ['custName','custPhone','custAddr','custRound'].forEach(id => document.getElementById(id).value = '');
+  renderMenus();
 }
 
+// ── 주문 현황 ──
 function renderOrders() {
   const list = document.getElementById('orderList');
   list.innerHTML = '';
   document.getElementById('orderCountBadge').textContent = `${store.orders.length}건`;
-
-  // 반찬별 집계
-  renderItemTally();
-
-  if (store.orders.length === 0) {
-    list.innerHTML = '<div class="empty-msg">아직 주문이 없어요</div>';
-    return;
-  }
-
-  [...store.orders].reverse().forEach((order, ri) => {
+  renderTally();
+  if (store.orders.length === 0) { list.innerHTML = '<div class="empty-msg">아직 주문이 없어요</div>'; return; }
+  [...store.orders].reverse().forEach(order => {
     const div = document.createElement('div');
     div.className = 'order-card';
     const d = new Date(order.time);
     const timeStr = `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+    let menuLines = '';
+    if (order.selections) {
+      store.categories.forEach(cat => {
+        const sel = order.selections[cat.id];
+        if (sel && sel.length > 0) menuLines += `<div class="order-cat-line">${cat.emoji} <b>${cat.name}:</b> ${sel.join(', ')}</div>`;
+      });
+    } else if (order.soup) {
+      // 구버전 호환
+      menuLines = `<div>🍲 <b>국·찌개:</b> ${order.soup}</div>`;
+      if (order.banchans) menuLines += `<div>🥗 <b>반찬:</b> ${order.banchans.join(', ')}</div>`;
+    }
     div.innerHTML = `
       <div class="order-card-header">
         <div class="order-card-name">${order.name}</div>
@@ -1065,312 +567,186 @@ function renderOrders() {
       <div class="order-card-detail">📱 ${order.phone || '-'}</div>
       <div class="order-card-detail">📍 ${order.addr || '-'}</div>
       <div class="order-card-detail">🔢 ${order.round || '-'}</div>
-      <div class="order-card-menus">🍲 ${order.soup} &nbsp;|&nbsp; 🥗 ${order.banchans.join(', ')}</div>
+      <div class="order-card-menus" style="margin-top:6px;">${menuLines}</div>
       <button class="delete-order-btn" onclick="deleteOrder('${order.fbKey}')">삭제</button>
     `;
     list.appendChild(div);
   });
 }
 
-function renderItemTally() {
-  const tallyEl = document.getElementById('itemTallyList');
-  tallyEl.innerHTML = '';
+function renderTally() {
+  const el = document.getElementById('itemTallyList');
+  el.innerHTML = '';
+  if (store.orders.length === 0) { el.innerHTML = '<div class="empty-msg" style="padding:8px 0;">주문이 쌓이면 여기서 집계를 볼 수 있어요</div>'; return; }
 
-  if (store.orders.length === 0) {
-    tallyEl.innerHTML = '<div class="empty-msg" style="padding:10px 0;">주문이 쌓이면 여기서 집계를 볼 수 있어요</div>';
-    return;
-  }
-
-  // 집계
-  const soupCount = {};
-  const banchanCount = {};
-
-  store.orders.forEach(order => {
-    soupCount[order.soup] = (soupCount[order.soup] || 0) + 1;
-    order.banchans.forEach(b => {
-      banchanCount[b] = (banchanCount[b] || 0) + 1;
+  store.categories.forEach(cat => {
+    const count = {};
+    store.orders.forEach(o => {
+      const sel = o.selections ? o.selections[cat.id] : (cat.id === 'soup' ? [o.soup] : o.banchans || []);
+      if (sel) sel.forEach(s => { count[s] = (count[s]||0) + 1; });
+    });
+    if (Object.keys(count).length === 0) return;
+    const max = Math.max(...Object.values(count));
+    const label = document.createElement('div');
+    label.className = 'tally-section-label';
+    label.textContent = `${cat.emoji} ${cat.name}`;
+    el.appendChild(label);
+    Object.entries(count).sort((a,b)=>b[1]-a[1]).forEach(([name, cnt]) => {
+      const pct = Math.round(cnt/max*100);
+      const row = document.createElement('div');
+      row.className = 'tally-row';
+      row.innerHTML = `<div class="tally-name">${name}</div><div class="tally-bar-wrap"><div class="tally-bar" style="width:${pct}%"></div></div><div class="tally-num">${cnt}개</div>`;
+      el.appendChild(row);
     });
   });
-
-  const maxSoup = Math.max(...Object.values(soupCount));
-  const maxBanchan = Math.max(...Object.values(banchanCount));
-
-  // 국 집계
-  const soupTitle = document.createElement('div');
-  soupTitle.style.cssText = 'font-size:11px;font-weight:700;color:var(--text-muted);margin:6px 0 4px;letter-spacing:0.5px;';
-  soupTitle.textContent = '🍲 국·찌개';
-  tallyEl.appendChild(soupTitle);
-
-  Object.entries(soupCount).sort((a,b)=>b[1]-a[1]).forEach(([name, cnt]) => {
-    const row = document.createElement('div');
-    row.className = 'tally-row';
-    const pct = Math.round((cnt / maxSoup) * 100);
-    row.innerHTML = `
-      <div class="tally-name">${name}</div>
-      <div class="tally-bar-wrap"><div class="tally-bar" style="width:${pct}%;background:#7BA06A;"></div></div>
-      <div class="tally-num">${cnt}개</div>
-    `;
-    tallyEl.appendChild(row);
-  });
-
-  const banchanTitle = document.createElement('div');
-  banchanTitle.style.cssText = 'font-size:11px;font-weight:700;color:var(--text-muted);margin:10px 0 4px;letter-spacing:0.5px;';
-  banchanTitle.textContent = '🥗 반찬';
-  tallyEl.appendChild(banchanTitle);
-
-  Object.entries(banchanCount).sort((a,b)=>b[1]-a[1]).forEach(([name, cnt]) => {
-    const row = document.createElement('div');
-    row.className = 'tally-row';
-    const pct = Math.round((cnt / maxBanchan) * 100);
-    row.innerHTML = `
-      <div class="tally-name">${name}</div>
-      <div class="tally-bar-wrap"><div class="tally-bar" style="width:${pct}%;"></div></div>
-      <div class="tally-num">${cnt}개</div>
-    `;
-    tallyEl.appendChild(row);
-  });
-}
-
-// ── 주문 ──
-function submitOrder() {
-  _submitOrder();
-}
-async function _submitOrder() {
-  const name = document.getElementById('custName').value.trim();
-  const phone = document.getElementById('custPhone').value.trim();
-  const addr = document.getElementById('custAddr').value.trim();
-  const round = document.getElementById('custRound').value.trim();
-  if (!name) { showToast('이름을 입력해 주세요'); return; }
-  if (!phone) { showToast('핸드폰 번호를 입력해 주세요'); return; }
-  if (!addr) { showToast('배송 주소를 입력해 주세요'); return; }
-  if (!round) { showToast('신청 회차를 입력해 주세요'); return; }
-
-  const soupEl = document.querySelector('input[name="soup"]:checked');
-  if (!soupEl) { showToast('국·찌개를 선택해 주세요'); return; }
-
-  const banchanEls = document.querySelectorAll('input[name="banchan"]:checked');
-  const limit = store.banchanCount || 3;
-  if (banchanEls.length < limit) { showToast(`반찬을 ${limit}개 선택해 주세요`); return; }
-
-  const order = {
-    name,
-    phone,
-    addr,
-    round,
-    soup: soupEl.value,
-    banchans: Array.from(banchanEls).map(e => e.value),
-    time: new Date().toISOString()
-  };
-
-  try {
-    const result = await fbPush('orders', order);
-    order.fbKey = result.name;
-    store.orders.push(order);
-  } catch(e) {
-    showToast('주문 저장에 실패했어요. 인터넷을 확인해 주세요.');
-    return;
-  }
-
-  // 완료 화면
-  document.getElementById('orderForm').style.display = 'none';
-  const done = document.getElementById('doneScreen');
-  done.style.display = 'block';
-  document.getElementById('doneSummary').innerHTML = `
-    <b>이름:</b> ${name}<br>
-    <b>연락처:</b> ${phone}<br>
-    <b>주소:</b> ${addr}<br>
-    <b>신청 회차:</b> ${round}<br>
-    <b>국·찌개:</b> ${order.soup}<br>
-    <b>반찬:</b> ${order.banchans.join(', ')}
-  `;
-}
-
-function resetOrder() {
-  document.getElementById('orderForm').style.display = 'block';
-  document.getElementById('doneScreen').style.display = 'none';
-  document.getElementById('custName').value = '';
-  document.getElementById('custPhone').value = '';
-  document.getElementById('custAddr').value = '';
-  document.getElementById('custRound').value = '';
-  renderMenus();
 }
 
 async function deleteOrder(fbKey) {
   if (!confirm('이 주문을 삭제할까요?')) return;
-  try {
-    await fbDelete(`orders/${fbKey}`);
-    store.orders = store.orders.filter(o => o.fbKey !== fbKey);
-    renderOrders();
-  } catch(e) {
-    showToast('삭제에 실패했어요.');
-  }
+  try { await fbDelete(`orders/${fbKey}`); store.orders = store.orders.filter(o=>o.fbKey!==fbKey); renderOrders(); }
+  catch(e) { showToast('삭제에 실패했어요.'); }
 }
-
 async function clearOrders() {
   if (!confirm('전체 주문을 초기화할까요? 되돌릴 수 없어요.')) return;
-  try {
-    await fbDelete('orders');
-    store.orders = [];
-    renderOrders();
-  } catch(e) {
-    showToast('초기화에 실패했어요.');
-  }
+  try { await fbDelete('orders'); store.orders = []; renderOrders(); }
+  catch(e) { showToast('초기화에 실패했어요.'); }
 }
 
-// ── CSV 다운로드 ──
+// ── CSV ──
 function downloadCSV() {
   if (store.orders.length === 0) { showToast('주문 데이터가 없어요'); return; }
-
-  const limit = store.banchanCount || 3;
-  const headers = ['주문시간', '이름', '핸드폰', '주소', '신청회차', '국·찌개'];
-  for (let i = 1; i <= limit; i++) headers.push(`반찬${i}`);
-
+  const catHeaders = store.categories.map(c => c.name);
+  const headers = ['주문시간','이름','핸드폰','주소','신청회차', ...catHeaders];
   const rows = store.orders.map(o => {
     const d = new Date(o.time);
     const time = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-    const row = [time, o.name, o.phone || '', o.addr || '', o.round || '', o.soup];
-    for (let i = 0; i < limit; i++) row.push(o.banchans[i] || '');
-    return row;
+    const catVals = store.categories.map(cat => {
+      if (o.selections) return (o.selections[cat.id]||[]).join(', ');
+      if (cat.id === 'soup') return o.soup || '';
+      return (o.banchans||[]).join(', ');
+    });
+    return [time, o.name, o.phone||'', o.addr||'', o.round||'', ...catVals];
   });
-
-  // BOM for Excel Korean support
   const BOM = '\uFEFF';
-  const csv = BOM + [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const csv = BOM + [headers,...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  const badge = store.badge || '반찬주문';
   const today = new Date();
-  a.download = `${badge}_${today.getFullYear()}${today.getMonth()+1}${today.getDate()}.csv`;
+  a.download = `${store.badge||'반찬주문'}_${today.getFullYear()}${today.getMonth()+1}${today.getDate()}.csv`;
   a.click();
   URL.revokeObjectURL(url);
-  showToast('다운로드 완료! Excel에서 열어보세요');
+  showToast('다운로드 완료!');
 }
 
 // ── 메뉴 편집 ──
-function removeSoup(i) {
-  store.soups.splice(i, 1);
+function renderEditLists() {
+  const el = document.getElementById('catEditList');
+  el.innerHTML = '';
+  store.categories.forEach((cat, ci) => {
+    const block = document.createElement('div');
+    block.className = 'cat-edit-block';
+    const typeLabel = cat.type === 'radio' ? '하나만 선택' : '여러 개 선택';
+    block.innerHTML = `
+      <div class="cat-edit-header">
+        <span style="font-size:18px;">${cat.emoji}</span>
+        <span class="cat-edit-title">${cat.name}</span>
+        <span class="cat-edit-type">${typeLabel}</span>
+        <button class="remove-cat-btn" onclick="removeCat(${ci})">✕</button>
+      </div>
+      <div class="edit-list" id="editItems-${ci}"></div>
+      <div class="add-row">
+        <input type="text" id="newItem-${ci}" placeholder="메뉴 이름">
+        <button onclick="addItem(${ci})">+ 추가</button>
+      </div>
+    `;
+    el.appendChild(block);
+    const itemsEl = block.querySelector(`#editItems-${ci}`);
+    cat.items.forEach((item, ii) => {
+      const div = document.createElement('div');
+      div.className = 'edit-item';
+      div.innerHTML = `<span>${item}</span><button onclick="removeItem(${ci},${ii})">✕</button>`;
+      itemsEl.appendChild(div);
+    });
+  });
+}
+
+function removeCat(ci) {
+  if (!confirm(`"${store.categories[ci].name}" 카테고리를 삭제할까요?`)) return;
+  store.categories.splice(ci, 1);
   renderEditLists();
 }
-function addSoupMenu() {
-  const v = document.getElementById('newSoupInput').value.trim();
+function removeItem(ci, ii) { store.categories[ci].items.splice(ii,1); renderEditLists(); }
+function addItem(ci) {
+  const inp = document.getElementById(`newItem-${ci}`);
+  const v = inp.value.trim();
   if (!v) return;
-  store.soups.push(v);
-  document.getElementById('newSoupInput').value = '';
+  store.categories[ci].items.push(v);
+  inp.value = '';
   renderEditLists();
 }
-function removeBanchan(i) {
-  store.banchans.splice(i, 1);
-  renderEditLists();
+
+let newCatType = 'radio';
+function setNewCatType(type, btn) {
+  newCatType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
 }
-function addBanchanMenu() {
-  const v = document.getElementById('newBanchanInput').value.trim();
-  if (!v) return;
-  const noDup = document.getElementById('newBanchanNoDup').checked;
-  store.banchans.push({ name: v, noDup });
-  document.getElementById('newBanchanInput').value = '';
-  document.getElementById('newBanchanNoDup').checked = false;
+function addCategory() {
+  const emoji = document.getElementById('newCatEmoji').value.trim() || '🍽️';
+  const name  = document.getElementById('newCatName').value.trim();
+  if (!name) { showToast('카테고리 이름을 입력해 주세요'); return; }
+  const id = 'cat_' + Date.now();
+  store.categories.push({ id, emoji, name, type: newCatType, items: [] });
+  document.getElementById('newCatEmoji').value = '';
+  document.getElementById('newCatName').value = '';
   renderEditLists();
+  showToast(`"${name}" 카테고리가 추가됐어요`);
 }
 async function saveMenus() {
-  store.banchanCount = parseInt(document.getElementById('banchanCountInput').value) || 3;
   await saveConfig();
   renderMenus();
-  showToast('메뉴가 저장되었어요 ✓');
+  showToast('메뉴가 저장됐어요 ✓');
 }
 
 // ── 발송 정보 ──
+function renderDeliveryForm() {
+  document.getElementById('badgeInput').value = store.badge || '';
+  document.getElementById('deliveryDate').value = store.deliveryDate || '';
+  document.getElementById('deliveryNote').value = store.deliveryNote || '';
+}
 async function saveDelivery() {
   store.badge = document.getElementById('badgeInput').value.trim() || '우리가족반찬';
   store.deliveryDate = document.getElementById('deliveryDate').value;
   store.deliveryNote = document.getElementById('deliveryNote').value.trim();
   await saveConfig();
   renderHeader();
-  showToast('발송 정보가 저장되었어요 ✓');
+  showToast('발송 정보가 저장됐어요 ✓');
 }
 
 // ── 관리자 비밀번호 ──
-let pwBuffer = '';
-let adminUnlocked = false;
-
+let pwBuffer = '', adminUnlocked = false;
 function toggleAdmin() {
   const panel = document.getElementById('adminPanel');
-  if (panel.style.display === 'block') {
-    panel.style.display = 'none';
-    adminUnlocked = false;
-    return;
-  }
-  if (adminUnlocked) {
-    openAdminPanel();
-  } else {
-    openPwModal();
-  }
+  if (panel.style.display === 'block') { panel.style.display = 'none'; adminUnlocked = false; return; }
+  adminUnlocked ? openAdminPanel() : openPwModal();
 }
-
-function openPwModal() {
-  pwBuffer = '';
-  updateDots();
-  document.getElementById('pwErrorMsg').textContent = '';
-  document.getElementById('pwOverlay').classList.add('show');
-}
-
-function closePwModal() {
-  document.getElementById('pwOverlay').classList.remove('show');
-  pwBuffer = '';
-  updateDots();
-}
-
-function pwInput(num) {
-  if (pwBuffer.length >= 4) return;
-  pwBuffer += num;
-  updateDots();
-  if (pwBuffer.length === 4) {
-    setTimeout(checkPw, 120);
-  }
-}
-
-function pwDelete() {
-  pwBuffer = pwBuffer.slice(0, -1);
-  updateDots();
-  document.getElementById('pwErrorMsg').textContent = '';
-}
-
-function updateDots() {
-  for (let i = 0; i < 4; i++) {
-    const dot = document.getElementById(`dot${i}`);
-    dot.classList.toggle('filled', i < pwBuffer.length);
-    dot.classList.remove('error');
-  }
-}
-
+function openPwModal() { pwBuffer=''; updateDots(); document.getElementById('pwErrorMsg').textContent=''; document.getElementById('pwOverlay').classList.add('show'); }
+function closePwModal() { document.getElementById('pwOverlay').classList.remove('show'); pwBuffer=''; updateDots(); }
+function pwInput(n) { if(pwBuffer.length>=4) return; pwBuffer+=n; updateDots(); if(pwBuffer.length===4) setTimeout(checkPw,120); }
+function pwDelete() { pwBuffer=pwBuffer.slice(0,-1); updateDots(); document.getElementById('pwErrorMsg').textContent=''; }
+function updateDots() { for(let i=0;i<4;i++){const d=document.getElementById(`dot${i}`);d.classList.toggle('filled',i<pwBuffer.length);d.classList.remove('error');} }
 async function checkPw() {
-  const correctPw = await getStoredPw();
-  if (pwBuffer === correctPw) {
-    closePwModal();
-    adminUnlocked = true;
-    openAdminPanel();
-  } else {
-    for (let i = 0; i < 4; i++) {
-      document.getElementById(`dot${i}`).classList.add('error');
-    }
+  const correct = await getStoredPw();
+  if (pwBuffer === correct) { closePwModal(); adminUnlocked=true; openAdminPanel(); }
+  else {
+    for(let i=0;i<4;i++) document.getElementById(`dot${i}`).classList.add('error');
     document.getElementById('pwErrorMsg').textContent = '비밀번호가 맞지 않아요';
-    setTimeout(() => {
-      pwBuffer = '';
-      updateDots();
-      document.getElementById('pwErrorMsg').textContent = '';
-    }, 700);
+    setTimeout(() => { pwBuffer=''; updateDots(); document.getElementById('pwErrorMsg').textContent=''; }, 700);
   }
 }
-
-function openAdminPanel() {
-  const panel = document.getElementById('adminPanel');
-  panel.style.display = 'block';
-  renderEditLists();
-  renderDeliveryForm();
-  renderOrders();
-}
-
+function openAdminPanel() { document.getElementById('adminPanel').style.display='block'; renderEditLists(); renderDeliveryForm(); renderOrders(); }
 async function changePassword() {
   const np = document.getElementById('newPwInput').value.trim();
   const nc = document.getElementById('newPwConfirm').value.trim();
@@ -1382,30 +758,19 @@ async function changePassword() {
   showToast('비밀번호가 변경됐어요 ✓');
 }
 
-function switchTab(tab) {
-  document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.admin-content').forEach(el => el.classList.remove('active'));
+function switchTab(tab, btn) {
+  document.querySelectorAll('.admin-tab').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.admin-content').forEach(el=>el.classList.remove('active'));
+  btn.classList.add('active');
   document.getElementById(`tab-${tab}`).classList.add('active');
-  event.target.classList.add('active');
-  if (tab === 'orders') renderOrders();
-  if (tab === 'menu') renderEditLists();
-  if (tab === 'delivery') renderDeliveryForm();
+  if(tab==='orders') renderOrders();
+  if(tab==='menu') renderEditLists();
+  if(tab==='delivery') renderDeliveryForm();
 }
 
-// ── 토스트 ──
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2400);
-}
+function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2400); }
 
-// ── 초기화 ──
-async function init() {
-  await load();
-  renderHeader();
-  renderMenus();
-}
+async function init() { await load(); renderHeader(); renderMenus(); }
 init();
 </script>
 </body>
